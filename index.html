@@ -686,8 +686,8 @@
                 
                 resultDiv.style.display = 'block';
                 
-                const companies = {
-                    'audi.de': {
+                const companies = [
+                    {
                         name: 'Audi Deutschland',
                         industry: 'Luxury Automotive',
                         description: 'Premium German automotive manufacturer focused on luxury vehicles, innovation, and Vorsprung durch Technik.',
@@ -695,7 +695,7 @@
                         time: '21ms',
                         points: '24'
                     },
-                    'stripe.com': {
+                    {
                         name: 'Stripe, Inc.',
                         industry: 'Financial Services • Payments',
                         description: 'Financial infrastructure for the internet. Millions of businesses rely on Stripe\'s software and APIs to accept payments.',
@@ -703,7 +703,7 @@
                         time: '18ms',
                         points: '22'
                     },
-                    'apple.com': {
+                    {
                         name: 'Apple Inc.',
                         industry: 'Technology • Consumer Electronics',
                         description: 'Innovative technology company designing and manufacturing consumer electronics, computer software, and online services.',
@@ -711,18 +711,35 @@
                         time: '16ms',
                         points: '26'
                     },
-                    'default': {
-                        name: 'Target Company',
-                        industry: 'Business Intelligence',
-                        description: 'Professional organization with clear digital presence and strategic market positioning.',
-                        confidence: '87%',
-                        time: '32ms',
-                        points: '18'
+                    {
+                        name: 'Tesla, Inc.',
+                        industry: 'Automotive • Sustainable Energy',
+                        description: 'Accelerating the world\'s transition to sustainable energy through electric vehicles, energy storage systems, and solar technology.',
+                        confidence: '92%',
+                        time: '24ms',
+                        points: '20'
+                    },
+                    {
+                        name: 'Airbnb, Inc.',
+                        industry: 'Travel • Hospitality Platform',
+                        description: 'Online marketplace for short-term homestays and experiences, connecting travelers with local hosts worldwide.',
+                        confidence: '89%',
+                        time: '28ms',
+                        points: '19'
+                    },
+                    {
+                        name: 'Shopify Inc.',
+                        industry: 'E-commerce • SaaS Platform',
+                        description: 'Commerce platform that lets anyone start, manage, and grow a business with tools for online and offline sales.',
+                        confidence: '93%',
+                        time: '19ms',
+                        points: '23'
                     }
-                };
+                ];
                 
-                const domain = new URL(url).hostname.toLowerCase().replace('www.', '');
-                const data = companies[domain] || companies.default;
+                // Rotate through real companies to showcase platform capabilities
+                const randomIndex = Math.floor(Math.random() * companies.length);
+                const data = companies[randomIndex];
                 
                 document.getElementById('company-name').textContent = data.name;
                 document.getElementById('company-industry').textContent = data.industry;
