@@ -529,13 +529,13 @@
             
             <div class="demo-box">
                 <div class="demo-input-group">
-                    <input 
-                        type="url" 
-                        id="demo-url" 
-                        class="demo-input" 
-                        placeholder="https://audi.de"
-                        value="https://audi.de"
-                    >
+                    <select id="demo-url" class="demo-input" style="cursor: pointer;">
+                        <option value="https://audi.de">https://audi.de</option>
+                        <option value="https://stripe.com">https://stripe.com</option>
+                        <option value="https://apple.com">https://apple.com</option>
+                        <option value="https://airbnb.com">https://airbnb.com</option>
+                        <option value="https://shopify.com">https://shopify.com</option>
+                    </select>
                     <button onclick="runDemo()" class="demo-button" id="demo-btn">
                         <i data-feather="zap"></i>
                         Extract
@@ -686,8 +686,8 @@
                 
                 resultDiv.style.display = 'block';
                 
-                const companies = [
-                    {
+                const companies = {
+                    'https://audi.de': {
                         name: 'Audi Deutschland',
                         industry: 'Luxury Automotive',
                         description: 'Premium German automotive manufacturer focused on luxury vehicles, innovation, and Vorsprung durch Technik.',
@@ -695,7 +695,7 @@
                         time: '21ms',
                         points: '24'
                     },
-                    {
+                    'https://stripe.com': {
                         name: 'Stripe, Inc.',
                         industry: 'Financial Services • Payments',
                         description: 'Financial infrastructure for the internet. Millions of businesses rely on Stripe\'s software and APIs to accept payments.',
@@ -703,7 +703,7 @@
                         time: '18ms',
                         points: '22'
                     },
-                    {
+                    'https://apple.com': {
                         name: 'Apple Inc.',
                         industry: 'Technology • Consumer Electronics',
                         description: 'Innovative technology company designing and manufacturing consumer electronics, computer software, and online services.',
@@ -711,15 +711,7 @@
                         time: '16ms',
                         points: '26'
                     },
-                    {
-                        name: 'Tesla, Inc.',
-                        industry: 'Automotive • Sustainable Energy',
-                        description: 'Accelerating the world\'s transition to sustainable energy through electric vehicles, energy storage systems, and solar technology.',
-                        confidence: '92%',
-                        time: '24ms',
-                        points: '20'
-                    },
-                    {
+                    'https://airbnb.com': {
                         name: 'Airbnb, Inc.',
                         industry: 'Travel • Hospitality Platform',
                         description: 'Online marketplace for short-term homestays and experiences, connecting travelers with local hosts worldwide.',
@@ -727,7 +719,7 @@
                         time: '28ms',
                         points: '19'
                     },
-                    {
+                    'https://shopify.com': {
                         name: 'Shopify Inc.',
                         industry: 'E-commerce • SaaS Platform',
                         description: 'Commerce platform that lets anyone start, manage, and grow a business with tools for online and offline sales.',
@@ -735,11 +727,10 @@
                         time: '19ms',
                         points: '23'
                     }
-                ];
+                };
                 
-                // Rotate through real companies to showcase platform capabilities
-                const randomIndex = Math.floor(Math.random() * companies.length);
-                const data = companies[randomIndex];
+                // Get exact match for demo purposes
+                const data = companies[url];
                 
                 document.getElementById('company-name').textContent = data.name;
                 document.getElementById('company-industry').textContent = data.industry;
