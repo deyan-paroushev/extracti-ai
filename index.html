@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extracti — Intelligence Refined</title>
-    <meta name="description" content="Turn any company website into structured intelligence. For researchers who need to understand businesses quickly and thoroughly.">
+    <title>Extracti — Business Intelligence Refined</title>
+    <meta name="description" content="Turn any company website into structured business intelligence. For researchers who need to understand companies quickly and thoroughly.">
     
     <!-- Feather Icons CDN -->
     <script src="https://unpkg.com/feather-icons"></script>
@@ -17,28 +17,28 @@
         }
 
         :root {
-            /* Extracti's True Colors - Intelligent, Not Neural */
-            --extracti-void: oklch(0.04 0.002 240);
-            --extracti-depth: oklch(0.08 0.004 240);
-            --extracti-surface: oklch(0.12 0.006 240);
-            --extracti-elevated: oklch(0.16 0.008 240);
-            --extracti-glass: oklch(0.10 0.004 240 / 0.7);
+            /* Bold Extracti Colors - Deep Contrasts */
+            --extracti-void: oklch(0.02 0.001 240);
+            --extracti-depth: oklch(0.06 0.002 240);
+            --extracti-surface: oklch(0.10 0.004 240);
+            --extracti-elevated: oklch(0.14 0.006 240);
+            --extracti-glass: oklch(0.08 0.003 240 / 0.8);
             
-            --intelligence-primary: oklch(0.82 0.15 240);
-            --intelligence-secondary: oklch(0.72 0.12 200);
-            --intelligence-accent: oklch(0.88 0.10 160);
-            --intelligence-glow: oklch(0.82 0.15 240 / 0.3);
+            --intelligence-primary: oklch(0.85 0.20 220);
+            --intelligence-secondary: oklch(0.75 0.16 200);
+            --intelligence-accent: oklch(0.90 0.12 160);
+            --intelligence-glow: oklch(0.85 0.20 220 / 0.4);
             
-            --text-absolute: oklch(0.98 0.002 240);
-            --text-primary: oklch(0.90 0.004 240);
-            --text-secondary: oklch(0.72 0.006 240);
-            --text-tertiary: oklch(0.58 0.008 240);
-            --text-ghost: oklch(0.42 0.010 240);
+            --text-absolute: oklch(0.99 0.001 240);
+            --text-primary: oklch(0.92 0.003 240);
+            --text-secondary: oklch(0.75 0.005 240);
+            --text-tertiary: oklch(0.60 0.007 240);
+            --text-ghost: oklch(0.45 0.009 240);
             
-            --border-subtle: oklch(0.22 0.006 240);
-            --border-focus: oklch(0.82 0.15 240 / 0.4);
+            --border-subtle: oklch(0.20 0.005 240);
+            --border-focus: oklch(0.85 0.20 220 / 0.5);
             
-            /* Intelligent Typography Scale */
+            /* Bold Typography Scale */
             --text-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
             --text-sm: clamp(0.8125rem, 0.78rem + 0.17vw, 0.875rem);
             --text-base: clamp(0.875rem, 0.84rem + 0.19vw, 0.9375rem);
@@ -50,8 +50,9 @@
             --text-4xl: clamp(2.125rem, 1.89rem + 1.18vw, 2.875rem);
             --text-5xl: clamp(2.875rem, 2.48rem + 1.97vw, 4.125rem);
             --text-6xl: clamp(4.125rem, 3.45rem + 3.38vw, 6.25rem);
+            --text-7xl: clamp(6.25rem, 5.15rem + 5.50vw, 9.375rem);
             
-            /* Intelligent Spacing */
+            /* Bold Spacing */
             --space-1: clamp(0.125rem, 0.12rem + 0.03vw, 0.14rem);
             --space-2: clamp(0.25rem, 0.24rem + 0.05vw, 0.28rem);
             --space-3: clamp(0.375rem, 0.36rem + 0.08vw, 0.42rem);
@@ -66,18 +67,19 @@
             --space-40: clamp(5rem, 4.80rem + 1.00vw, 5.625rem);
             --space-48: clamp(6rem, 5.76rem + 1.20vw, 6.75rem);
             --space-64: clamp(8rem, 7.68rem + 1.60vw, 9rem);
+            --space-80: clamp(10rem, 9.60rem + 2.00vw, 11.25rem);
             
-            /* Refined Effects */
-            --shadow-subtle: 0 0.0625rem 0.25rem oklch(0.04 0.002 240 / 0.4);
-            --shadow-moderate: 0 0.125rem 0.5rem oklch(0.04 0.002 240 / 0.6);
-            --shadow-deep: 0 0.25rem 1rem oklch(0.04 0.002 240 / 0.8);
-            --shadow-intelligence: 0 0 1.5rem var(--intelligence-glow);
+            /* Dramatic Effects */
+            --shadow-subtle: 0 0.125rem 0.5rem oklch(0.02 0.001 240 / 0.6);
+            --shadow-moderate: 0 0.25rem 1rem oklch(0.02 0.001 240 / 0.8);
+            --shadow-deep: 0 0.5rem 2rem oklch(0.02 0.001 240 / 0.9);
+            --shadow-intelligence: 0 0 2rem var(--intelligence-glow);
             
-            --blur-subtle: blur(0.5rem) saturate(120%);
-            --blur-moderate: blur(1rem) saturate(140%);
+            --blur-subtle: blur(0.5rem) saturate(130%);
+            --blur-moderate: blur(1rem) saturate(150%);
             
-            /* Intelligent Motion */
-            --ease-intelligence: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            /* Bold Motion */
+            --ease-bold: cubic-bezier(0.25, 0.46, 0.45, 0.94);
             --ease-focus: cubic-bezier(0.23, 1, 0.32, 1);
             --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -86,14 +88,14 @@
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', system-ui, sans-serif;
             background: var(--extracti-void);
             color: var(--text-primary);
-            line-height: 1.5;
+            line-height: 1.4;
             font-size: var(--text-base);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
         }
 
-        /* Intelligent Background */
+        /* Dramatic Background */
         body::before {
             content: '';
             position: fixed;
@@ -102,14 +104,14 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 30%, var(--intelligence-glow) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, oklch(0.72 0.12 200 / 0.2) 0%, transparent 40%),
-                linear-gradient(135deg, transparent 0%, oklch(0.82 0.15 240 / 0.02) 50%, transparent 100%);
+                radial-gradient(circle at 25% 20%, var(--intelligence-glow) 0%, transparent 50%),
+                radial-gradient(circle at 75% 80%, oklch(0.75 0.16 200 / 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, transparent 0%, oklch(0.85 0.20 220 / 0.03) 50%, transparent 100%);
             pointer-events: none;
             z-index: -1;
         }
 
-        /* Refined Header */
+        /* Bold Header */
         .header {
             position: fixed;
             top: 0;
@@ -118,16 +120,16 @@
             background: var(--extracti-glass);
             border-bottom: 0.0625rem solid var(--border-subtle);
             z-index: 100;
-            padding: var(--space-16) 0;
+            padding: var(--space-20) 0;
         }
 
         .nav {
-            max-width: clamp(60rem, 90vw, 80rem);
+            max-width: clamp(60rem, 90vw, 85rem);
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 var(--space-24);
+            padding: 0 var(--space-32);
         }
 
         .logo {
@@ -135,16 +137,50 @@
             align-items: center;
             gap: var(--space-8);
             font-size: var(--text-xl);
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-absolute);
             letter-spacing: -0.02em;
         }
 
         .logo-icon {
-            width: 1.5rem;
-            height: 1.5rem;
+            width: 1.75rem;
+            height: 1.75rem;
             color: var(--intelligence-primary);
             stroke-width: 1.5;
+        }
+
+        .nav-links {
+            display: none;
+            gap: var(--space-32);
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: var(--text-base);
+            transition: all 0.2s var(--ease-focus);
+        }
+
+        .nav-link:hover {
+            color: var(--intelligence-primary);
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--intelligence-primary), var(--intelligence-secondary));
+            color: var(--extracti-void);
+            padding: var(--space-12) var(--space-20);
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: var(--text-sm);
+            transition: all 0.3s var(--ease-bold);
+            box-shadow: var(--shadow-moderate), var(--shadow-intelligence);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-0.125rem) scale(1.02);
+            box-shadow: var(--shadow-deep), 0 0 2rem var(--intelligence-glow);
         }
 
         .nav-toggle {
@@ -152,7 +188,7 @@
             border: none;
             color: var(--text-primary);
             cursor: pointer;
-            padding: var(--space-6);
+            padding: var(--space-8);
             border-radius: 0.375rem;
             transition: all 0.2s var(--ease-focus);
         }
@@ -162,10 +198,10 @@
             color: var(--intelligence-primary);
         }
 
-        /* Intelligent Hero */
+        /* Bold Hero - Centered */
         .hero {
-            padding: var(--space-64) var(--space-24) var(--space-48);
-            max-width: clamp(60rem, 90vw, 80rem);
+            padding: var(--space-80) var(--space-32) var(--space-64);
+            max-width: clamp(60rem, 90vw, 85rem);
             margin: 0 auto;
             text-align: center;
             position: relative;
@@ -178,11 +214,11 @@
             background: var(--extracti-surface);
             border: 0.0625rem solid var(--border-subtle);
             color: var(--intelligence-primary);
-            padding: var(--space-6) var(--space-16);
-            border-radius: 1.5rem;
+            padding: var(--space-8) var(--space-20);
+            border-radius: 2rem;
             font-size: var(--text-sm);
-            font-weight: 500;
-            margin-bottom: var(--space-32);
+            font-weight: 600;
+            margin-bottom: var(--space-40);
             backdrop-filter: var(--blur-subtle);
             box-shadow: var(--shadow-subtle);
         }
@@ -194,11 +230,11 @@
         }
 
         .hero-title {
-            font-size: var(--text-6xl);
-            font-weight: 700;
-            line-height: 0.95;
-            margin-bottom: var(--space-24);
-            letter-spacing: -0.04em;
+            font-size: var(--text-7xl);
+            font-weight: 800;
+            line-height: 0.9;
+            margin-bottom: var(--space-32);
+            letter-spacing: -0.05em;
             color: var(--text-absolute);
         }
 
@@ -210,27 +246,29 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            display: block;
+            margin-top: var(--space-16);
         }
 
         .hero-subtitle {
-            font-size: var(--text-xl);
+            font-size: var(--text-2xl);
             color: var(--text-secondary);
-            margin-bottom: var(--space-40);
-            max-width: 42rem;
+            margin-bottom: var(--space-48);
+            max-width: 48rem;
             margin-left: auto;
             margin-right: auto;
-            line-height: 1.4;
+            line-height: 1.3;
             font-weight: 400;
         }
 
-        /* Intelligent Demo */
+        /* Bold Demo - Centered */
         .intelligence-demo {
             background: var(--extracti-surface);
             border: 0.0625rem solid var(--border-subtle);
-            border-radius: 1rem;
-            padding: var(--space-32);
-            margin: var(--space-40) auto 0;
-            max-width: 44rem;
+            border-radius: 1.5rem;
+            padding: var(--space-40);
+            margin: var(--space-48) auto 0;
+            max-width: 50rem;
             backdrop-filter: var(--blur-moderate);
             box-shadow: var(--shadow-deep);
             position: relative;
@@ -243,7 +281,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 0.125rem;
+            height: 0.25rem;
             background: linear-gradient(90deg, 
                 var(--intelligence-primary), 
                 var(--intelligence-secondary), 
@@ -252,26 +290,27 @@
 
         .demo-input-group {
             display: flex;
-            gap: var(--space-12);
-            margin-bottom: var(--space-24);
+            gap: var(--space-16);
+            margin-bottom: var(--space-32);
         }
 
         .demo-input {
             flex: 1;
-            padding: var(--space-16);
+            padding: var(--space-20);
             border: 0.0625rem solid var(--border-subtle);
-            border-radius: 0.75rem;
-            font-size: var(--text-base);
+            border-radius: 1rem;
+            font-size: var(--text-lg);
             background: var(--extracti-depth);
             color: var(--text-primary);
             transition: all 0.3s var(--ease-focus);
             font-family: inherit;
+            font-weight: 500;
         }
 
         .demo-input:focus {
             outline: none;
             border-color: var(--border-focus);
-            box-shadow: 0 0 0 0.1875rem oklch(0.82 0.15 240 / 0.15);
+            box-shadow: 0 0 0 0.25rem oklch(0.85 0.20 220 / 0.2);
             background: var(--extracti-void);
         }
 
@@ -279,23 +318,23 @@
             background: linear-gradient(135deg, var(--intelligence-primary), var(--intelligence-secondary));
             color: var(--extracti-void);
             border: none;
-            padding: var(--space-16) var(--space-24);
-            border-radius: 0.75rem;
-            font-weight: 600;
-            font-size: var(--text-base);
+            padding: var(--space-20) var(--space-32);
+            border-radius: 1rem;
+            font-weight: 700;
+            font-size: var(--text-lg);
             cursor: pointer;
-            transition: all 0.3s var(--ease-intelligence);
+            transition: all 0.3s var(--ease-bold);
             display: flex;
             align-items: center;
-            gap: var(--space-6);
+            gap: var(--space-8);
             font-family: inherit;
             box-shadow: var(--shadow-moderate), var(--shadow-intelligence);
             white-space: nowrap;
         }
 
         .demo-button:hover {
-            transform: translateY(-0.125rem) scale(1.02);
-            box-shadow: var(--shadow-deep), 0 0 2rem var(--intelligence-glow);
+            transform: translateY(-0.25rem) scale(1.03);
+            box-shadow: var(--shadow-deep), 0 0 3rem var(--intelligence-glow);
         }
 
         .demo-button:disabled {
@@ -307,17 +346,17 @@
         .demo-result {
             background: var(--extracti-depth);
             border: 0.0625rem solid var(--border-subtle);
-            border-radius: 0.75rem;
-            padding: var(--space-24);
+            border-radius: 1rem;
+            padding: var(--space-32);
             text-align: left;
             display: none;
-            animation: intelligentReveal 0.6s var(--ease-reveal);
+            animation: boldReveal 0.8s var(--ease-reveal);
         }
 
-        @keyframes intelligentReveal {
+        @keyframes boldReveal {
             from {
                 opacity: 0;
-                transform: translateY(1rem) scale(0.98);
+                transform: translateY(2rem) scale(0.95);
             }
             to {
                 opacity: 1;
@@ -328,60 +367,61 @@
         .result-header {
             display: flex;
             align-items: center;
-            gap: var(--space-12);
-            margin-bottom: var(--space-16);
+            gap: var(--space-16);
+            margin-bottom: var(--space-20);
         }
 
         .result-pulse {
-            width: 0.75rem;
-            height: 0.75rem;
+            width: 1rem;
+            height: 1rem;
             background: var(--intelligence-accent);
             border-radius: 50%;
-            animation: intelligentPulse 2s infinite;
-            box-shadow: 0 0 0.5rem var(--intelligence-accent);
+            animation: boldPulse 2s infinite;
+            box-shadow: 0 0 1rem var(--intelligence-accent);
         }
 
-        @keyframes intelligentPulse {
+        @keyframes boldPulse {
             0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
         }
 
         .result-title {
-            font-weight: 600;
-            font-size: var(--text-xl);
+            font-weight: 700;
+            font-size: var(--text-2xl);
             color: var(--text-absolute);
         }
 
         .result-subtitle {
             color: var(--text-secondary);
-            font-size: var(--text-sm);
-            margin-bottom: var(--space-16);
-            font-weight: 500;
+            font-size: var(--text-base);
+            margin-bottom: var(--space-20);
+            font-weight: 600;
         }
 
         .result-description {
             color: var(--text-tertiary);
             line-height: 1.5;
-            margin-bottom: var(--space-20);
+            margin-bottom: var(--space-24);
+            font-size: var(--text-base);
         }
 
         .result-metrics {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-12);
+            gap: var(--space-16);
         }
 
         .metric {
             text-align: center;
-            padding: var(--space-16);
+            padding: var(--space-20);
             background: var(--extracti-void);
             border: 0.0625rem solid var(--border-subtle);
-            border-radius: 0.5rem;
+            border-radius: 0.75rem;
         }
 
         .metric-value {
-            font-size: var(--text-2xl);
-            font-weight: 700;
+            font-size: var(--text-3xl);
+            font-weight: 800;
             color: var(--intelligence-primary);
             display: block;
         }
@@ -390,87 +430,89 @@
             font-size: var(--text-xs);
             color: var(--text-ghost);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 600;
-            margin-top: var(--space-2);
+            letter-spacing: 0.15em;
+            font-weight: 700;
+            margin-top: var(--space-4);
         }
 
-        /* Intelligent Features */
+        /* Bold Features - Centered Headlines */
         .features {
-            padding: var(--space-48) var(--space-24);
+            padding: var(--space-80) var(--space-32);
             background: var(--extracti-depth);
         }
 
         .features-container {
-            max-width: clamp(60rem, 90vw, 80rem);
+            max-width: clamp(60rem, 90vw, 85rem);
             margin: 0 auto;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: var(--space-48);
+            margin-bottom: var(--space-64);
         }
 
         .section-title {
-            font-size: var(--text-5xl);
-            font-weight: 700;
-            margin-bottom: var(--space-16);
+            font-size: var(--text-6xl);
+            font-weight: 800;
+            margin-bottom: var(--space-24);
             color: var(--text-absolute);
-            letter-spacing: -0.03em;
+            letter-spacing: -0.04em;
         }
 
         .section-subtitle {
-            font-size: var(--text-lg);
+            font-size: var(--text-xl);
             color: var(--text-secondary);
-            max-width: 36rem;
+            max-width: 42rem;
             margin: 0 auto;
-            line-height: 1.4;
+            line-height: 1.3;
+            font-weight: 400;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
-            gap: var(--space-24);
+            grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+            gap: var(--space-32);
         }
 
         .feature-card {
             background: var(--extracti-surface);
             border: 0.0625rem solid var(--border-subtle);
-            padding: var(--space-24);
-            border-radius: 1rem;
-            transition: all 0.4s var(--ease-intelligence);
+            padding: var(--space-32);
+            border-radius: 1.5rem;
+            transition: all 0.4s var(--ease-bold);
             backdrop-filter: var(--blur-subtle);
+            text-align: center;
         }
 
         .feature-card:hover {
-            transform: translateY(-0.5rem);
-            box-shadow: var(--shadow-deep), 0 0 2rem var(--intelligence-glow);
+            transform: translateY(-1rem);
+            box-shadow: var(--shadow-deep), 0 0 3rem var(--intelligence-glow);
             border-color: var(--border-focus);
         }
 
         .feature-icon {
-            width: 3rem;
-            height: 3rem;
+            width: 4rem;
+            height: 4rem;
             background: var(--extracti-void);
             border: 0.0625rem solid var(--border-subtle);
-            border-radius: 0.75rem;
+            border-radius: 1rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: var(--space-20);
+            margin: 0 auto var(--space-24);
             color: var(--intelligence-primary);
         }
 
         .feature-icon svg {
-            width: 1.5rem;
-            height: 1.5rem;
+            width: 2rem;
+            height: 2rem;
             stroke-width: 1.5;
         }
 
         .feature-title {
-            font-size: var(--text-xl);
-            font-weight: 600;
-            margin-bottom: var(--space-12);
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            margin-bottom: var(--space-16);
             color: var(--text-absolute);
         }
 
@@ -480,73 +522,76 @@
             font-size: var(--text-base);
         }
 
-        /* Intelligent CTA */
+        /* Bold CTA - Centered */
         .cta-section {
-            padding: var(--space-48) var(--space-24);
+            padding: var(--space-80) var(--space-32);
             text-align: center;
-            max-width: 36rem;
+            max-width: 42rem;
             margin: 0 auto;
         }
 
         .cta-title {
-            font-size: var(--text-4xl);
-            font-weight: 700;
-            margin-bottom: var(--space-16);
+            font-size: var(--text-5xl);
+            font-weight: 800;
+            margin-bottom: var(--space-24);
             color: var(--text-absolute);
+            letter-spacing: -0.03em;
         }
 
         .cta-subtitle {
             color: var(--text-secondary);
-            margin-bottom: var(--space-32);
-            font-size: var(--text-lg);
-            line-height: 1.4;
+            margin-bottom: var(--space-40);
+            font-size: var(--text-xl);
+            line-height: 1.3;
+            font-weight: 400;
         }
 
         .cta-button {
             background: linear-gradient(135deg, var(--intelligence-primary), var(--intelligence-secondary));
             color: var(--extracti-void);
-            padding: var(--space-16) var(--space-32);
-            border-radius: 0.75rem;
-            font-weight: 600;
+            padding: var(--space-20) var(--space-40);
+            border-radius: 1rem;
+            font-weight: 700;
             text-decoration: none;
-            transition: all 0.3s var(--ease-intelligence);
+            transition: all 0.3s var(--ease-bold);
             display: inline-flex;
             align-items: center;
-            gap: var(--space-8);
+            gap: var(--space-12);
             border: none;
             cursor: pointer;
-            font-size: var(--text-lg);
+            font-size: var(--text-xl);
             font-family: inherit;
             box-shadow: var(--shadow-deep), var(--shadow-intelligence);
         }
 
         .cta-button:hover {
-            transform: translateY(-0.25rem) scale(1.05);
-            box-shadow: var(--shadow-deep), 0 0 3rem var(--intelligence-glow);
+            transform: translateY(-0.5rem) scale(1.05);
+            box-shadow: var(--shadow-deep), 0 0 4rem var(--intelligence-glow);
         }
 
-        /* Refined Footer */
+        /* Bold Footer */
         .footer {
             background: var(--extracti-void);
-            padding: var(--space-32);
+            padding: var(--space-40);
             text-align: center;
             border-top: 0.0625rem solid var(--border-subtle);
         }
 
         .footer-content {
-            max-width: clamp(60rem, 90vw, 80rem);
+            max-width: clamp(60rem, 90vw, 85rem);
             margin: 0 auto;
             color: var(--text-ghost);
-            font-size: var(--text-sm);
+            font-size: var(--text-base);
+            font-weight: 500;
         }
 
         /* Loading Animation */
         .loading {
             display: inline-block;
-            width: 1rem;
-            height: 1rem;
-            border: 0.125rem solid var(--extracti-void);
-            border-top: 0.125rem solid transparent;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 0.1875rem solid var(--extracti-void);
+            border-top: 0.1875rem solid transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -557,6 +602,16 @@
         }
 
         /* Responsive Adjustments */
+        @media (min-width: 48rem) {
+            .nav-links {
+                display: flex;
+            }
+            
+            .nav-toggle {
+                display: none;
+            }
+        }
+
         @media (max-width: 48rem) {
             .demo-input-group {
                 flex-direction: column;
@@ -573,7 +628,7 @@
     </style>
 </head>
 <body>
-    <!-- Refined Header -->
+    <!-- Bold Header -->
     <header class="header">
         <nav class="nav">
             <div class="logo">
@@ -581,13 +636,21 @@
                 extracti
             </div>
             
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#demo" class="nav-link">Demo</a>
+                <a href="#pricing" class="nav-link">Pricing</a>
+            </div>
+            
+            <a href="#" class="nav-cta">Sign In</a>
+            
             <button class="nav-toggle" onclick="toggleMenu()">
                 <i data-feather="menu"></i>
             </button>
         </nav>
     </header>
 
-    <!-- Intelligent Hero -->
+    <!-- Bold Hero - Centered -->
     <section class="hero">
         <div class="hero-badge">
             <i data-feather="target" class="badge-icon"></i>
@@ -595,7 +658,7 @@
         </div>
         
         <h1 class="hero-title">
-            Turn company websites into<br>
+            Turn company websites into
             <span class="intelligence-text">structured intelligence</span>
         </h1>
         
@@ -604,7 +667,7 @@
             industry insights, and company intelligence from any website in seconds.
         </p>
 
-        <!-- Intelligent Demo -->
+        <!-- Bold Demo - Centered -->
         <div class="intelligence-demo">
             <div class="demo-input-group">
                 <input 
@@ -646,7 +709,7 @@
         </div>
     </section>
 
-    <!-- Intelligent Features -->
+    <!-- Bold Features - Centered Headlines -->
     <section class="features" id="features">
         <div class="features-container">
             <div class="section-header">
@@ -720,7 +783,7 @@
         </div>
     </section>
 
-    <!-- Intelligent CTA -->
+    <!-- Bold CTA - Centered -->
     <section class="cta-section">
         <h2 class="cta-title">Start extracting intelligence</h2>
         <p class="cta-subtitle">
@@ -733,7 +796,7 @@
         </a>
     </section>
 
-    <!-- Refined Footer -->
+    <!-- Bold Footer -->
     <footer class="footer">
         <div class="footer-content">
             <p>&copy; 2025 Extracti • Business intelligence extraction platform</p>
