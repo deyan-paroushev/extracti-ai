@@ -913,7 +913,7 @@
             }
         }
 
-        // Main demo function
+        // Universal browser-compatible demo function
         async function runDemo() {
             const urlInput = document.getElementById('demo-url');
             const resultDiv = document.getElementById('demo-result');
@@ -921,7 +921,7 @@
             
             let url = urlInput.value.trim();
             if (!url) {
-                alert('Please enter a website URL');
+                showError('Please enter a website URL');
                 return;
             }
             
@@ -934,83 +934,153 @@
             try {
                 new URL(url);
             } catch {
-                alert('Please enter a valid website URL');
+                showError('Please enter a valid website URL');
                 return;
             }
             
             // Loading state
             button.innerHTML = '<span class="loading"></span> Analyzing';
             button.disabled = true;
+            resultDiv.style.display = 'none';
             
             try {
-                console.log('Calling API for:', url);
+                console.log('🔍 Extracting intelligence from:', url);
                 
-                // Call real Extracti API
-                const response = await fetch('https://aemxkdycpfjcqokkjqtt.supabase.co/functions/v1/analyze-company', {
+                // Create clean fetch request - compatible with all browsers
+                const requestOptions = {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Accept': 'application/json',
                         'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbXhrZHljcGZqY3Fva2tqcXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDczOTAwNTYsImV4cCI6MjA2Mjk2NjA1Nn0.VXGFZmEG5MVyEe9XYjKAggWL0M2nAieBCzlJ_RqvN9E'
                     },
                     body: JSON.stringify({
                         url: url,
                         format: 'json'
-                    })
-                });
+                    }),
+                    mode: 'cors',
+                    credentials: 'omit'
+                };
                 
-                console.log('API Response status:', response.status);
+                // Call Extracti API with clean fetch
+                const response = await fetch('https://aemxkdycpfjcqokkjqtt.supabase.co/functions/v1/analyze-company', requestOptions);
+                
+                console.log('📡 API Response status:', response.status);
+                console.log('📋 Response headers:', Object.fromEntries(response.headers.entries()));
                 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    console.error('API Error:', errorText);
-                    throw new Error(`API Error: ${response.status}`);
+                    console.error('❌ API Error:', errorText);
+                    throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
                 }
                 
                 const result = await response.json();
-                console.log('API Result:', result);
+                console.log('✅ API Result received:', result.success ? 'Success' : 'Failed');
                 
                 if (result.success && result.data) {
                     displayRealResults(result.data);
                     resultDiv.style.display = 'block';
                     window.lastExtractionData = result.data;
                     incrementUsageCounter();
-                    console.log(`✅ Extraction successful: ${result.data.company_info?.name} (${result.data.processing_time_ms}ms)`);
+                    console.log(`🎯 Company extracted: ${result.data.company_info?.name} (${result.data.processing_time_ms}ms)`);
                 } else {
                     throw new Error(result.error || 'No data returned from API');
                 }
                 
             } catch (error) {
-                console.error('Demo error:', error);
-                
-                let errorMessage = 'Failed to extract data';
-                if (error.message.includes('fetch')) {
-                    errorMessage = 'Network error - please check your connection';
-                } else if (error.message.includes('API Error: 500')) {
-                    errorMessage = 'Server error - please try again in a moment';
-                } else if (error.message.includes('API Error: 429')) {
-                    errorMessage = 'Rate limit reached - please wait a moment';
-                } else {
-                    errorMessage = error.message;
-                }
-                
-                resultDiv.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: #ef4444;">
-                        <div style="font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
-                        <p style="margin-bottom: 1rem; font-weight: 500;">${errorMessage}</p>
-                        <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1.5rem;">
-                            Our AI typically extracts company details, industry analysis, and contact information in under 2 seconds.
-                        </p>
-                        <button onclick="runDemo()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 0.375rem; cursor: pointer;">
-                            Try Again
-                        </button>
-                    </div>
-                `;
-                resultDiv.style.display = 'block';
+                console.error('🚨 Extraction error:', error);
+                handleExtractionError(error, resultDiv);
             } finally {
+                // Reset button state
                 button.innerHTML = '<i data-feather="arrow-right"></i> Extract Intelligence';
                 button.disabled = false;
-                feather.replace();
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
             }
+        }
+        
+        // Clean error handling
+        function handleExtractionError(error, resultDiv) {
+            let errorMessage = 'Failed to extract company intelligence';
+            let troubleshooting = 'Please try again or contact support if the issue persists.';
+            
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                errorMessage = 'Network connection error';
+                troubleshooting = 'Please check your internet connection and try again.';
+            } else if (error.message.includes('500')) {
+                errorMessage = 'Server temporarily unavailable';
+                troubleshooting = 'Our servers are experiencing high load. Please try again in a moment.';
+            } else if (error.message.includes('429')) {
+                errorMessage = 'Too many requests';
+                troubleshooting = 'Please wait a moment before trying again.';
+            } else if (error.message.includes('cors') || error.message.includes('CORS')) {
+                errorMessage = 'Browser security restriction';
+                troubleshooting = 'This appears to be a browser configuration issue. Try refreshing the page.';
+            }
+            
+            resultDiv.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #ef4444;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
+                    <h3 style="margin-bottom: 1rem; font-weight: 600; color: var(--text-primary);">${errorMessage}</h3>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 20rem; margin-left: auto; margin-right: auto;">
+                        ${troubleshooting}
+                    </p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="runDemo()" style="padding: 0.75rem 1.5rem; background: var(--primary); color: var(--void); border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
+                            Try Again
+                        </button>
+                        <button onclick="showSampleExtraction()" style="padding: 0.75rem 1.5rem; background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
+                            View Sample
+                        </button>
+                    </div>
+                </div>
+            `;
+            resultDiv.style.display = 'block';
+        }
+        
+        // Show a sample extraction for demonstration
+        function showSampleExtraction() {
+            const sampleData = {
+                company_info: {
+                    name: 'Sample Technology Company',
+                    domain: 'example.com',
+                    industry: 'technology',
+                    description: 'A leading technology company specializing in innovative software solutions.'
+                },
+                business_intelligence: {
+                    business_scale: 'established',
+                    digital_maturity: 'advanced',
+                    industry_category: 'technology'
+                },
+                contact_info: {
+                    emails: ['contact@example.com'],
+                    phones: ['+1-555-0123'],
+                    addresses: ['123 Tech Street, San Francisco, CA']
+                },
+                confidence_score: 0.92,
+                processing_time_ms: 850,
+                word_count: 1250,
+                language: 'en'
+            };
+            
+            displayRealResults(sampleData);
+            document.getElementById('demo-result').style.display = 'block';
+            window.lastExtractionData = sampleData;
+        }
+        
+        // Simple error display helper
+        function showError(message) {
+            const resultDiv = document.getElementById('demo-result');
+            resultDiv.innerHTML = `
+                <div style="text-align: center; padding: 1.5rem; color: #ef4444;">
+                    <p style="margin: 0; font-weight: 500;">${message}</p>
+                </div>
+            `;
+            resultDiv.style.display = 'block';
+            setTimeout(() => {
+                resultDiv.style.display = 'none';
+            }, 3000);
         }
         
         function displayRealResults(data) {
