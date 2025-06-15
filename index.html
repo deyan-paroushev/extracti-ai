@@ -736,6 +736,258 @@
             white-space: pre-wrap;
         }
 
+        /* Browser Support */
+        .browser-support {
+            background: var(--surface);
+            border-radius: clamp(0.75rem, 0.68rem + 0.33vw, 0.9375rem);
+            padding: var(--space-2xl);
+            margin: var(--space-3xl) auto 0;
+            max-width: var(--content-width);
+            border: 0.0625rem solid var(--border);
+            text-align: center;
+        }
+
+        .browser-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(3rem, 8vw, 4rem), 1fr));
+            gap: var(--space-lg);
+            max-width: clamp(15rem, 50vw, 20rem);
+            margin: var(--space-lg) auto 0;
+        }
+
+        .browser-icon {
+            padding: var(--space-md);
+            background: var(--primary-ghost);
+            border-radius: clamp(0.5rem, 0.45rem + 0.22vw, 0.625rem);
+            border: 0.0625rem solid var(--primary-whisper);
+            font-size: var(--text-lg);
+            transition: all 0.2s var(--ease-gentle);
+        }
+
+        .browser-icon:hover {
+            transform: translateY(-0.125rem);
+            background: var(--primary-whisper);
+        }
+
+        /* Features */
+        .features {
+            padding: clamp(3rem, 5vw, 6rem) clamp(1rem, 4vw, 2rem);
+            background: var(--dark);
+        }
+
+        .features-container {
+            max-width: var(--content-width);
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-5xl);
+        }
+
+        .section-title {
+            font-size: var(--text-4xl);
+            font-weight: 600;
+            margin-bottom: var(--space-xl);
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: var(--text-md);
+            color: var(--text-secondary);
+            max-width: clamp(20rem, 85vw, 32rem);
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(16rem, 45vw, 18rem), 1fr));
+            gap: var(--space-3xl);
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: clamp(1.5rem, 4vw, 3rem);
+            border-radius: clamp(0.5rem, 0.45rem + 0.22vw, 0.625rem);
+            border: 0.0625rem solid var(--border);
+            transition: all 0.3s var(--ease-gentle);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-0.25rem);
+            box-shadow: var(--shadow-gentle);
+            border-color: var(--border-subtle);
+        }
+
+        .feature-icon {
+            width: clamp(2rem, 5vw, 2.5rem);
+            height: clamp(2rem, 5vw, 2.5rem);
+            background: var(--primary-ghost);
+            border-radius: clamp(0.5rem, 0.45rem + 0.22vw, 0.625rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-2xl);
+            color: var(--primary);
+        }
+
+        .feature-icon svg {
+            width: clamp(1rem, 2.5vw, 1.25rem);
+            height: clamp(1rem, 2.5vw, 1.25rem);
+            stroke-width: 1.5;
+        }
+
+        .feature-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            font-size: var(--text-base);
+        }
+
+        /* Use Cases */
+        .use-cases {
+            padding: clamp(3rem, 5vw, 6rem) clamp(1rem, 4vw, 2rem);
+            max-width: var(--content-width);
+            margin: 0 auto;
+        }
+
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(12rem, 40vw, 14rem), 1fr));
+            gap: var(--space-2xl);
+            margin-top: var(--space-4xl);
+        }
+
+        .use-case {
+            text-align: center;
+            padding: var(--space-2xl);
+            background: var(--surface);
+            border-radius: clamp(0.5rem, 0.45rem + 0.22vw, 0.625rem);
+            border: 0.0625rem solid var(--border);
+            transition: all 0.25s var(--ease-gentle);
+        }
+
+        .use-case:hover {
+            transform: translateY(-0.125rem);
+            box-shadow: var(--shadow-subtle);
+            border-color: var(--border-subtle);
+        }
+
+        .use-case-icon {
+            width: clamp(2rem, 6vw, 2.5rem);
+            height: clamp(2rem, 6vw, 2.5rem);
+            background: var(--primary);
+            border-radius: clamp(0.5rem, 0.45rem + 0.22vw, 0.625rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-xl);
+            color: var(--void);
+        }
+
+        .use-case-icon svg {
+            width: clamp(1rem, 2.5vw, 1.25rem);
+            height: clamp(1rem, 2.5vw, 1.25rem);
+            stroke-width: 1.5;
+        }
+
+        .use-case-title {
+            font-size: var(--text-md);
+            font-weight: 600;
+            margin-bottom: var(--space-md);
+            color: var(--text-primary);
+        }
+
+        .use-case-description {
+            color: var(--text-secondary);
+            font-size: var(--text-sm);
+            line-height: 1.4;
+        }
+
+        /* CTA */
+        .cta-section {
+            padding: clamp(3rem, 5vw, 6rem) clamp(1rem, 4vw, 2rem);
+            text-align: center;
+            background: var(--dark);
+            max-width: var(--cta-width);
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: var(--text-3xl);
+            font-weight: 600;
+            margin-bottom: var(--space-lg);
+            color: var(--text-primary);
+        }
+
+        .cta-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-3xl);
+            font-size: var(--text-md);
+            line-height: 1.5;
+        }
+
+        .cta-button {
+            background: var(--primary);
+            color: var(--void);
+            padding: var(--space-lg) var(--space-2xl);
+            border-radius: clamp(0.5rem, 0.45rem + 0.22vw, 0.625rem);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s var(--ease-gentle);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: var(--text-base);
+        }
+
+        .cta-button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-0.0625rem);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .cta-note {
+            margin-top: var(--space-xl);
+            color: var(--text-ghost);
+            font-size: var(--text-xs);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--void);
+            padding: var(--space-3xl);
+            text-align: center;
+            border-top: 0.0625rem solid var(--border);
+        }
+
+        .footer-content {
+            max-width: var(--content-width);
+            margin: 0 auto;
+            color: var(--text-ghost);
+            font-size: var(--text-sm);
+            padding: 0 clamp(1rem, 4vw, 2rem);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: clamp(0.75rem, 1.5vw, 0.875rem);
+            height: clamp(0.75rem, 1.5vw, 0.875rem);
+            border: 0.125rem solid var(--void);
+            border-top: 0.125rem solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
         /* Responsive Design */
         @media (max-width: 48rem) {
             .nav-links {
@@ -881,7 +1133,163 @@
                 </div>
             </div>
         </div>
+
+        <!-- Browser Support -->
+        <div class="browser-support">
+            <h3 style="color: var(--text-primary); margin: 0 0 var(--space-sm) 0; font-size: var(--text-lg);">Works on All Major Browsers</h3>
+            <p style="color: var(--text-secondary); margin: 0 0 var(--space-lg) 0; font-size: var(--text-sm);">Chrome • Firefox • Edge • Safari • Opera</p>
+            
+            <div class="browser-grid">
+                <div class="browser-icon" title="Chrome">🌐</div>
+                <div class="browser-icon" title="Firefox">🦊</div>
+                <div class="browser-icon" title="Edge">🔷</div>
+                <div class="browser-icon" title="Safari">🧭</div>
+                <div class="browser-icon" title="Opera">🎭</div>
+            </div>
+        </div>
     </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="section-header">
+                <h2 class="section-title">Thoughtful by design</h2>
+                <p class="section-subtitle">
+                    Intelligence extraction built for teams who value precision, depth, and the quiet confidence of well-crafted tools.
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-feather="eye"></i>
+                    </div>
+                    <h3 class="feature-title">Sees beyond the surface</h3>
+                    <p class="feature-description">
+                        Understands content structure and business context, extracting insights that matter rather than just scraping what's visible.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-feather="compass"></i>
+                    </div>
+                    <h3 class="feature-title">Guided by confidence</h3>
+                    <p class="feature-description">
+                        Every insight includes precision scoring, so you know exactly when to trust the data and when to dig deeper.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-feather="layers"></i>
+                    </div>
+                    <h3 class="feature-title">Adapts gracefully</h3>
+                    <p class="feature-description">
+                        Handles any website architecture with intelligent fallbacks, ensuring you always receive valuable insights.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-feather="archive"></i>
+                    </div>
+                    <h3 class="feature-title">Remembers everything</h3>
+                    <p class="feature-description">
+                        Builds your research library automatically, creating connections and patterns across your intelligence gathering.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-feather="users"></i>
+                    </div>
+                    <h3 class="feature-title">Universal compatibility</h3>
+                    <p class="feature-description">
+                        Works seamlessly across Chrome, Firefox, Edge, Safari, and Opera. One extension, every browser.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i data-feather="trending-up"></i>
+                    </div>
+                    <h3 class="feature-title">Reveals patterns</h3>
+                    <p class="feature-description">
+                        Discovers trends and opportunities across your research, turning isolated insights into strategic advantage.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section class="use-cases" id="use-cases">
+        <div class="section-header">
+            <h2 class="section-title">For thoughtful professionals</h2>
+            <p class="section-subtitle">
+                Teams who understand that quality intelligence requires more than quick answers—it demands depth, context, and reliability.
+            </p>
+        </div>
+        
+        <div class="use-cases-grid">
+            <div class="use-case">
+                <div class="use-case-icon">
+                    <i data-feather="target"></i>
+                </div>
+                <h3 class="use-case-title">Strategic Sales</h3>
+                <p class="use-case-description">Understand prospects deeply before the first conversation</p>
+            </div>
+            
+            <div class="use-case">
+                <div class="use-case-icon">
+                    <i data-feather="search"></i>
+                </div>
+                <h3 class="use-case-title">Market Research</h3>
+                <p class="use-case-description">Map competitive landscapes with systematic precision</p>
+            </div>
+            
+            <div class="use-case">
+                <div class="use-case-icon">
+                    <i data-feather="briefcase"></i>
+                </div>
+                <h3 class="use-case-title">Due Diligence</h3>
+                <p class="use-case-description">Comprehensive company analysis with confidence metrics</p>
+            </div>
+            
+            <div class="use-case">
+                <div class="use-case-icon">
+                    <i data-feather="compass"></i>
+                </div>
+                <h3 class="use-case-title">Strategic Planning</h3>
+                <p class="use-case-description">Industry insights that inform long-term decisions</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Extension CTA -->
+    <section class="cta-section" id="extension">
+        <h2 class="cta-title">Save your research</h2>
+        <p class="cta-subtitle">
+            Get our universal browser extension to extract from any website and build your intelligence library. Works on Chrome, Firefox, Edge, Safari, and Opera.
+        </p>
+        
+        <a href="#" onclick="showExtensionInfo()" class="cta-button">
+            <i data-feather="download"></i>
+            Get Extension - $9/month
+        </a>
+        
+        <p class="cta-note">
+            Universal compatibility • Unlimited extractions • 14-day free trial
+        </p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Extracti • Thoughtful business intelligence for all browsers</p>
+        </div>
+    </footer>
 
     <script>
         // Enhanced Global State
@@ -895,7 +1303,46 @@
                 feather.replace();
             }
             setupEnhancedEventListeners();
+            initializeUsageCounter();
         });
+
+        // Usage tracking
+        function initializeUsageCounter() {
+            const counter = localStorage.getItem('extracti_demo_count') || 0;
+            if (counter > 0) {
+                addUsageIndicator(counter);
+            }
+        }
+        
+        function addUsageIndicator(count) {
+            const demoSection = document.querySelector('.hero-demo');
+            const counterDiv = document.createElement('div');
+            counterDiv.style.cssText = `
+                text-align: center; 
+                margin-top: 1rem; 
+                font-size: 0.75rem; 
+                color: var(--text-ghost);
+            `;
+            counterDiv.innerHTML = `
+                🎯 You've tested ${count} companies • Unlimited free extractions available
+            `;
+            demoSection.appendChild(counterDiv);
+        }
+        
+        function incrementUsageCounter() {
+            const currentCount = parseInt(localStorage.getItem('extracti_demo_count') || '0');
+            const newCount = currentCount + 1;
+            localStorage.setItem('extracti_demo_count', newCount.toString());
+            
+            const existingCounter = document.querySelector('.hero-demo > div:last-child');
+            if (existingCounter && existingCounter.innerHTML.includes('You\'ve tested')) {
+                existingCounter.innerHTML = `
+                    🎯 You've tested ${newCount} companies • Unlimited free extractions available
+                `;
+            } else {
+                addUsageIndicator(newCount);
+            }
+        }
 
         function setupEnhancedEventListeners() {
             const demoInput = document.getElementById('demo-url');
@@ -917,7 +1364,7 @@
         }
 
         // ============================================
-        // ENHANCED DEMO FUNCTION WITH PROGRESS
+        // ENHANCED DEMO FUNCTION WITH WORKING API
         // ============================================
         async function runEnhancedDemo() {
             if (isExtracting) return;
@@ -1066,37 +1513,39 @@
         }
 
         // ============================================
-        // ENHANCED EXTRACTION LOGIC
+        // WORKING ENHANCED EXTRACTION LOGIC
         // ============================================
         async function performEnhancedExtraction(url) {
             const apiUrl = 'https://aemxkdycpfjcqokkjqtt.supabase.co/functions/v1/analyze-company';
-            const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbXhrZHljcGZqY3Fva2tqcXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5MDg5MzksImV4cCI6MjA2NDQ4NDkzOX0.h87BYbdJynUTsTSXFpz0GHfTI5AeNcEIMaUCaJ0nMjs';
+            // Using the working API key from your test page
+            const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbXhrZHljcGZqY3Fva2tqcXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDczOTAwNTYsImV4cCI6MjA2Mjk2NjA1Nn0.VXGFZmEG5MVyEe9XYjKAggWL0M2nAieBCzlJ_RqvN9E';
             
+            // Using the working configuration from your test page
             const requestOptions = {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${anonKey}`,
-                    'apikey': anonKey,
-                    'x-client-info': 'extracti-enhanced@2.0.0'
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${anonKey}`
                 },
                 body: JSON.stringify({
                     url: url,
-                    format: 'json',
-                    options: {
-                        analysis_depth: 'comprehensive',
-                        include_patterns: true,
-                        include_contact: true,
-                        include_vectors: true
-                    }
+                    format: 'json'
                 }),
-                mode: 'cors'
+                mode: 'cors',
+                credentials: 'omit'
             };
+            
+            console.log('🔍 Extracting intelligence from:', url);
             
             const response = await fetch(apiUrl, requestOptions);
             
+            console.log('📡 API Response status:', response.status);
+            console.log('📋 Response headers:', Object.fromEntries(response.headers.entries()));
+            
             if (!response.ok) {
                 const errorText = await response.text();
+                console.error('❌ API Error:', errorText);
                 let errorData;
                 try {
                     errorData = JSON.parse(errorText);
@@ -1104,15 +1553,18 @@
                     errorData = { message: errorText };
                 }
                 
-                throw new Error(`API Error: ${response.status} - ${errorData.message || response.statusText}`);
+                throw new Error(`Server responded with ${response.status}: ${errorData.message || response.statusText}`);
             }
             
             const result = await response.json();
+            console.log('✅ API Result received:', result.success ? 'Success' : 'Failed');
             
             if (result.success && result.data) {
                 currentExtractionData = result.data;
                 displayEnhancedResults(result.data);
                 showSuccessBanner();
+                incrementUsageCounter();
+                console.log(`🎯 Company extracted: ${result.data.company_info?.name} (${result.data.processing_time_ms}ms)`);
             } else {
                 throw new Error(result.error || 'No data returned from API');
             }
@@ -1664,6 +2116,50 @@ No contact information found.
         }
 
         function contactSupport() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">Get Help & Support</div>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="margin-bottom: 1rem;">Need assistance with Extracti? We're here to help!</p>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">📧 Email Support</h4>
+                            <p>For technical issues and general inquiries:</p>
+                            <a href="mailto:support@extracti.ai?subject=Technical Support Request" class="action-button secondary" style="display: inline-flex; margin-top: 0.5rem;">
+                                Contact Support
+                            </a>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">🚀 Feature Requests</h4>
+                            <p>Have ideas for improvements?</p>
+                            <a href="mailto:hello@extracti.ai?subject=Feature Request" class="action-button secondary" style="display: inline-flex; margin-top: 0.5rem;">
+                                Share Ideas
+                            </a>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">📚 Common Solutions</h4>
+                            <ul style="margin-left: 1rem; line-height: 1.6;">
+                                <li>Clear browser cache and try again</li>
+                                <li>Check if the website is publicly accessible</li>
+                                <li>Try a different company website</li>
+                                <li>Refresh the page and retry extraction</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function showExtensionInfo() {
             const modal = document.createElement('div');
             modal.className = 'modal-overlay';
             modal.innerHTML = `
