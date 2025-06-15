@@ -6,10 +6,10 @@
     <title>Extracti — Business Intelligence Refined</title>
     <meta name="description" content="Transform any company website into structured business intelligence. Free unlimited testing, Chrome extension for saving research. Works on Chrome, Firefox, Edge, Safari, Opera.">
     
-    <!-- Content Security Policy - Allow Supabase connections and cdnjs -->
+    <!-- Content Security Policy - Allow Supabase connections -->
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self'; 
-        script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; 
+        script-src 'self' 'unsafe-inline' https://unpkg.com; 
         style-src 'self' 'unsafe-inline'; 
         connect-src 'self' https://*.supabase.co https://aemxkdycpfjcqokkjqtt.supabase.co; 
         img-src 'self' data: https:; 
@@ -18,8 +18,6 @@
     
     <!-- Feather Icons CDN -->
     <script src="https://unpkg.com/feather-icons"></script>
-    <!-- jsPDF for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
         * {
@@ -1089,7 +1087,7 @@
                     placeholder="Enter any company website (e.g., apple.com, stripe.com, audi.de, microsoft.com)"
                     value=""
                 >
-                <button onclick="runEnhancedDemo()" class="demo-button" id="demo-btn">
+                <button onclick="runDemo()" class="demo-button" id="demo-btn">
                     <i data-feather="arrow-right"></i>
                     Extract Intelligence
                 </button>
@@ -1344,10 +1342,88 @@
                 console.warn('⚠️ Feather icons not loaded');
                 debugLog('Feather icons not loaded', 'warning');
             }
-            setupEnhancedEventListeners();
+            setupEventListeners();
             initializeUsageCounter();
-            debugLog('Enhanced Extracti v2.0 initialized');
+            debugLog('Extracti v2.0 initialized');
         });
+
+        function setupEventListeners() {
+            const demoInput = document.getElementById('demo-url');
+            if (demoInput) {
+                demoInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        runDemo();
+                    }
+                });
+
+                // Auto-format URLs
+                demoInput.addEventListener('blur', function() {
+                    let url = this.value.trim();
+                    if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
+                        this.value = 'https://' + url;
+                    }
+                });
+            }
+        }
+
+        function handleExtractionError(error, resultDiv) {
+            let errorMessage = 'Failed to extract company intelligence';
+            let troubleshooting = 'Please try again or contact support if the issue persists.';
+            
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                errorMessage = 'Network connection error';
+                troubleshooting = 'Please check your internet connection and try again.';
+            } else if (error.message.includes('CORS') || error.message.includes('cors')) {
+                errorMessage = 'Browser security restriction';
+                troubleshooting = 'This appears to be a browser configuration issue. Try refreshing the page.';
+            } else if (error.message.includes('500')) {
+                errorMessage = 'Server temporarily unavailable';
+                troubleshooting = 'Our servers are experiencing high load. Please try again in a moment.';
+            } else if (error.message.includes('429')) {
+                errorMessage = 'Too many requests';
+                troubleshooting = 'Please wait a moment before trying again.';
+            } else if (error.message.includes('400')) {
+                errorMessage = 'Invalid website URL';
+                troubleshooting = 'Please check that you entered a valid website URL and try again.';
+            }
+            
+            resultDiv.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #ef4444;">
+                    <div style="font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
+                    <h3 style="margin-bottom: 1rem; font-weight: 600; color: var(--text-primary);">${errorMessage}</h3>
+                    <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 20rem; margin-left: auto; margin-right: auto;">
+                        ${troubleshooting}
+                    </p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <button onclick="runDemo()" style="padding: 0.75rem 1.5rem; background: var(--primary); color: var(--void); border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
+                            Try Again
+                        </button>
+                        <button onclick="toggleDebug()" style="padding: 0.75rem 1.5rem; background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
+                            Show Debug Info
+                        </button>
+                    </div>
+                </div>
+            `;
+            resultDiv.style.display = 'block';
+        }
+        
+        // Simple error display helper
+        function showError(message) {
+            const resultDiv = document.getElementById('demo-result');
+            resultDiv.innerHTML = `
+                <div style="text-align: center; padding: 1.5rem; color: #ef4444;">
+                    <p style="margin: 0; font-weight: 500;">${message}</p>
+                </div>
+            `;
+            resultDiv.style.display = 'block';
+            setTimeout(() => {
+                resultDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function showExtensionInfo() {
+            alert('Extension info coming soon! Your API is working perfectly.');
+        }
 
         // Usage tracking
         function initializeUsageCounter() {
@@ -1407,22 +1483,16 @@
         }
 
         // ============================================
-        // ENHANCED DEMO FUNCTION WITH WORKING API
+        // WORKING API CALL - EXACT MATCH TO YOUR WORKING VERSION
         // ============================================
-        async function runEnhancedDemo() {
-            if (isExtracting) return;
-            
+        async function runDemo() {
             const urlInput = document.getElementById('demo-url');
             const resultDiv = document.getElementById('demo-result');
             const button = document.getElementById('demo-btn');
             
             let url = urlInput.value.trim();
             if (!url) {
-                showEnhancedError('URL Required', 'Please enter a website URL to extract company intelligence.', [
-                    'Try example URLs: apple.com, microsoft.com, stripe.com',
-                    'Make sure the URL is accessible and valid',
-                    'Use company websites for best results'
-                ]);
+                showError('Please enter a website URL');
                 return;
             }
             
@@ -1431,35 +1501,87 @@
                 url = 'https://' + url;
             }
             
-            // Enhanced URL validation
+            // Validate URL
             try {
-                const urlObj = new URL(url);
-                if (!urlObj.hostname.includes('.')) {
-                    throw new Error('Invalid domain');
-                }
+                new URL(url);
             } catch {
-                showEnhancedError('Invalid URL', 'Please enter a valid website URL.', [
-                    'Make sure the URL includes a domain (e.g., company.com)',
-                    'Check for typos in the website address',
-                    'Ensure the website is publicly accessible'
-                ]);
+                showError('Please enter a valid website URL');
                 return;
             }
             
-            isExtracting = true;
-            showProgress();
-            startLoadingState(button);
+            // Loading state
+            button.innerHTML = '<span class="loading"></span> Analyzing';
+            button.disabled = true;
             resultDiv.style.display = 'none';
             
+            debugLog(`Starting extraction for: ${url}`);
+            
             try {
-                await performEnhancedExtraction(url);
+                const apiUrl = 'https://aemxkdycpfjcqokkjqtt.supabase.co/functions/v1/analyze-company';
+                const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbXhrZHljcGZqY3Fva2tqcXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5MDg5MzksImV4cCI6MjA2NDQ4NDkzOX0.h87BYbdJynUTsTSXFpz0GHfTI5AeNcEIMaUCaJ0nMjs';
+                
+                debugLog('Preparing API request...', 'network');
+                
+                const requestData = {
+                    url: url
+                };
+                
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `Bearer ${anonKey}`,
+                        'apikey': anonKey,
+                        'x-client-info': 'extracti-web@1.0.0'
+                    },
+                    body: JSON.stringify(requestData),
+                    mode: 'cors'
+                };
+                
+                debugLog(`API URL: ${apiUrl}`, 'network');
+                debugLog(`Request headers: ${JSON.stringify(Object.keys(requestOptions.headers))}`, 'network');
+                debugLog(`Request body: ${JSON.stringify(requestData)}`, 'network');
+                
+                // Call the Edge Function
+                debugLog('Sending request...', 'network');
+                const response = await fetch(apiUrl, requestOptions);
+                
+                debugLog(`Response status: ${response.status} ${response.statusText}`, 
+                    response.ok ? 'success' : 'error');
+                debugLog(`Response headers: ${JSON.stringify(Object.fromEntries(response.headers.entries()))}`, 'network');
+                
+                // Check for successful response
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    debugLog(`Error response body: ${errorText}`, 'error');
+                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+                }
+                
+                // Parse the successful response
+                const result = await response.json();
+                debugLog('Response parsed successfully', 'success');
+                
+                if (result.success && result.data) {
+                    displayResults(result.data);
+                    resultDiv.style.display = 'block';
+                    window.lastExtractionData = result.data;
+                    incrementUsageCounter();
+                    debugLog(`Extraction successful! Company: ${result.data.company_info?.name}`, 'success');
+                } else {
+                    throw new Error(result.error || 'No data returned from API');
+                }
+                
             } catch (error) {
-                console.error('Enhanced extraction failed:', error);
-                handleEnhancedError(error);
+                debugLog(`Extraction failed: ${error.message}`, 'error');
+                debugLog(`Error type: ${error.constructor.name}`, 'error');
+                handleExtractionError(error, resultDiv);
             } finally {
-                isExtracting = false;
-                hideProgress();
-                resetLoadingState(button);
+                // Reset button state
+                button.innerHTML = '<i data-feather="arrow-right"></i> Extract Intelligence';
+                button.disabled = false;
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                }
             }
         }
 
@@ -1625,32 +1747,67 @@
         // ============================================
         // ENHANCED RESULTS DISPLAY
         // ============================================
-        function displayEnhancedResults(data) {
+        function displayResults(data) {
             const resultDiv = document.getElementById('demo-result');
             
-            // Extract comprehensive information
-            const company = data.company_info || {};
-            const business = data.business_intelligence || {};
-            const contact = data.contact_info || {};
-            const patterns = data.content_patterns || {};
-            const semantic = data.semantic_analysis || {};
-            
-            const companyName = company.name || 'Unknown Company';
-            const industry = company.industry || business.industry_category || 'Unknown Industry';
-            const businessScale = business.business_scale || 'Unknown Scale';
+            // Extract key information
+            const companyName = data.company_info?.name || 'Company Extracted';
+            const industry = data.company_info?.industry || data.business_intelligence?.industry_category || 'Unknown Industry';
+            const businessScale = data.business_intelligence?.business_scale || 'Unknown Scale';
             const confidence = Math.round((data.confidence_score || 0.85) * 100);
             const processingTime = data.processing_time_ms || 0;
-            const description = data.description || company.description || 'Business intelligence extracted from website content.';
+            const description = data.description || data.company_info?.description || 'Business intelligence extracted from website content.';
             
             // Build contact section
-            const contactDetails = buildContactSection(contact);
+            let contactSection = '';
+            if (data.contact_info?.emails?.length || data.contact_info?.phones?.length) {
+                const contactItems = [];
+                if (data.contact_info.emails?.length) {
+                    contactItems.push(`📧 ${data.contact_info.emails.slice(0, 2).join(', ')}`);
+                }
+                if (data.contact_info.phones?.length) {
+                    contactItems.push(`📞 ${data.contact_info.phones.slice(0, 2).join(', ')}`);
+                }
+                if (data.contact_info.addresses?.length) {
+                    contactItems.push(`📍 ${data.contact_info.addresses.slice(0, 1).join(', ')}`);
+                }
+                
+                contactSection = `
+                <div style="margin-top: 1.5rem; padding: 1rem; background: var(--void); border-radius: 0.5rem; border: 1px solid var(--border);">
+                    <h4 style="color: var(--primary); margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600;">Contact Intelligence</h4>
+                    ${contactItems.map(item => `<p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.25rem 0;">${item}</p>`).join('')}
+                </div>
+                `;
+            }
             
-            // Build business intelligence section
-            const businessDetails = buildBusinessIntelligenceSection(business, patterns, semantic);
+            // Build insights section
+            let insightsSection = '';
+            if (data.business_intelligence) {
+                const insights = [];
+                if (data.business_intelligence.digital_maturity) {
+                    insights.push(`🔧 Digital Maturity: ${data.business_intelligence.digital_maturity}`);
+                }
+                if (data.business_intelligence.activity_type) {
+                    insights.push(`🎯 Activity: ${data.business_intelligence.activity_type.replace(/_/g, ' ')}`);
+                }
+                if (data.business_intelligence.market_orientation) {
+                    insights.push(`🌍 Market: ${data.business_intelligence.market_orientation}`);
+                }
+                if (data.language) {
+                    insights.push(`🗣️ Language: ${data.language.toUpperCase()}`);
+                }
+                
+                if (insights.length > 0) {
+                    insightsSection = `
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: var(--primary-ghost); border-radius: 0.5rem; border: 1px solid var(--primary-whisper);">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem; font-size: 0.875rem; font-weight: 600;">Business Intelligence</h4>
+                        ${insights.map(insight => `<p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.25rem 0;">${insight}</p>`).join('')}
+                    </div>
+                    `;
+                }
+            }
             
-            // Build technical analysis section
-            const technicalDetails = buildTechnicalAnalysisSection(data, patterns, semantic);
-            
+            // Show the rich results
             resultDiv.innerHTML = `
                 <div class="result-header">
                     <div class="result-indicator"></div>
@@ -1669,54 +1826,32 @@
                         <span class="stat-label">Processing</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-value">${data.word_count || '0'}</span>
-                        <span class="stat-label">Words</span>
-                    </div>
-                    <div class="stat">
-                        <span class="stat-value">${(data.structured_fields?.length || 0)}</span>
+                        <span class="stat-value">${data.word_count || data.structured_fields?.length || '0'}</span>
                         <span class="stat-label">Data Points</span>
                     </div>
                 </div>
                 
-                <div class="details-grid">
-                    ${contactDetails}
-                    ${businessDetails}
-                    ${technicalDetails}
+                ${contactSection}
+                ${insightsSection}
+                
+                <div style="margin-top: 1.5rem; text-align: center; padding: 0.75rem; background: var(--surface); border-radius: 0.375rem; border: 1px solid var(--border);">
+                    <p style="margin: 0; font-size: 0.75rem; color: var(--text-ghost);">
+                        ✅ Live extraction successful! Your Edge Function v18.1 is working perfectly.
+                    </p>
                 </div>
                 
-                <div class="action-buttons">
-                    <button class="action-button primary" onclick="viewFullReport()">
-                        <i data-feather="file-text"></i>
-                        View Full Report
+                <div style="margin-top: 1rem; text-align: center; padding: 1rem; background: linear-gradient(135deg, var(--primary-ghost), var(--primary-whisper)); border-radius: 0.5rem; border: 1px solid var(--primary-whisper);">
+                    <p style="margin: 0 0 0.5rem 0; font-size: 0.875rem; font-weight: 600; color: var(--primary);">
+                        💡 Want to save this research?
+                    </p>
+                    <p style="margin: 0 0 1rem 0; font-size: 0.75rem; color: var(--text-secondary);">
+                        Get our browser extension to extract & save from any website
+                    </p>
+                    <button onclick="showExtensionInfo()" style="padding: 0.5rem 1rem; background: var(--primary); color: var(--void); border: none; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 500; cursor: pointer;">
+                        Get Extension - $9/month
                     </button>
-                    <button class="action-button secondary" onclick="downloadPDF()">
-                        <i data-feather="download"></i>
-                        Download PDF
-                    </button>
-                    <button class="action-button secondary" onclick="downloadJSON()">
-                        <i data-feather="code"></i>
-                        Export JSON
-                    </button>
-                    <button class="action-button secondary" onclick="downloadMarkdown()">
-                        <i data-feather="file"></i>
-                        Markdown
-                    </button>
-                </div>
-                
-                <div class="success-banner">
-                    ✅ Live extraction successful! Your Edge Function v18.1 is working perfectly.
                 </div>
             `;
-            
-            resultDiv.style.display = 'block';
-            
-            // Replace feather icons after adding new content
-            setTimeout(() => {
-                if (typeof feather !== 'undefined') {
-                    feather.replace();
-                    console.log('✅ Feather icons updated in results');
-                }
-            }, 100);
         }
 
         function buildContactSection(contact) {
