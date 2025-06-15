@@ -6,7 +6,7 @@
     <title>Extracti — Business Intelligence Refined</title>
     <meta name="description" content="Transform any company website into structured business intelligence. Free unlimited testing, Chrome extension for saving research. Works on Chrome, Firefox, Edge, Safari, Opera.">
     
-    <!-- Content Security Policy - Allow Supabase connections -->
+    <!-- Content Security Policy - Allow Supabase connections and cdnjs -->
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self'; 
         script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; 
@@ -1335,11 +1335,18 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize feather icons
             if (typeof feather !== 'undefined') {
                 feather.replace();
+                console.log('✅ Feather icons initialized');
+                debugLog('Feather icons initialized');
+            } else {
+                console.warn('⚠️ Feather icons not loaded');
+                debugLog('Feather icons not loaded', 'warning');
             }
             setupEnhancedEventListeners();
             initializeUsageCounter();
+            debugLog('Enhanced Extracti v2.0 initialized');
         });
 
         // Usage tracking
@@ -1703,10 +1710,13 @@
             
             resultDiv.style.display = 'block';
             
-            // Replace feather icons
-            if (typeof feather !== 'undefined') {
-                feather.replace();
-            }
+            // Replace feather icons after adding new content
+            setTimeout(() => {
+                if (typeof feather !== 'undefined') {
+                    feather.replace();
+                    console.log('✅ Feather icons updated in results');
+                }
+            }, 100);
         }
 
         function buildContactSection(contact) {
@@ -2050,6 +2060,7 @@ No contact information found.
             const loadingOverlay = document.getElementById('loading-overlay');
             loadingOverlay.classList.remove('show');
             
+            // Reinitialize feather icons
             if (typeof feather !== 'undefined') {
                 feather.replace();
             }
