@@ -9,7 +9,7 @@
     <!-- Content Security Policy - Allow Supabase connections -->
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self'; 
-        script-src 'self' 'unsafe-inline' https://unpkg.com; 
+        script-src 'self' 'unsafe-inline' https://unpkg.com https://cdnjs.cloudflare.com; 
         style-src 'self' 'unsafe-inline'; 
         connect-src 'self' https://*.supabase.co https://aemxkdycpfjcqokkjqtt.supabase.co; 
         img-src 'self' data: https:; 
@@ -18,6 +18,8 @@
     
     <!-- Feather Icons CDN -->
     <script src="https://unpkg.com/feather-icons"></script>
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
     <style>
         * {
@@ -41,6 +43,9 @@
             
             --accent: oklch(0.70 0.20 145);
             --secondary: oklch(0.68 0.18 200);
+            --warning: oklch(0.70 0.15 60);
+            --error: oklch(0.60 0.20 20);
+            --success: oklch(0.70 0.15 140);
             
             --text-primary: oklch(0.95 0.002 280);
             --text-secondary: oklch(0.75 0.004 280);
@@ -77,7 +82,7 @@
             
             /* Fluid Layout */
             --content-width: clamp(60rem, 85vw, 76rem);
-            --demo-width: clamp(20rem, 90vw, 38rem);
+            --demo-width: clamp(20rem, 90vw, 42rem);
             --cta-width: clamp(18rem, 85vw, 32rem);
             
             /* Effects */
@@ -237,7 +242,7 @@
             font-weight: 400;
         }
 
-        /* Demo */
+        /* Enhanced Demo Section */
         .hero-demo {
             background: var(--surface);
             border-radius: clamp(0.75rem, 0.68rem + 0.33vw, 0.9375rem);
@@ -246,6 +251,8 @@
             max-width: var(--demo-width);
             border: 0.0625rem solid var(--border);
             box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
         }
 
         .demo-input-group {
@@ -289,6 +296,8 @@
             gap: var(--space-sm);
             font-family: inherit;
             width: 100%;
+            position: relative;
+            overflow: hidden;
         }
 
         .demo-button:hover:not(:disabled) {
@@ -297,11 +306,81 @@
         }
 
         .demo-button:disabled {
-            opacity: 0.6;
+            opacity: 0.8;
             cursor: not-allowed;
             transform: none;
         }
 
+        /* Enhanced Progress Indicator */
+        .progress-container {
+            margin: var(--space-lg) 0;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s var(--ease-gentle);
+        }
+
+        .progress-container.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 0.25rem;
+            background: var(--border);
+            border-radius: 0.125rem;
+            overflow: hidden;
+            margin-bottom: var(--space-md);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 0.125rem;
+            transition: width 0.5s var(--ease-gentle);
+            width: 0%;
+        }
+
+        .progress-stage {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .progress-stage.active {
+            color: var(--primary);
+        }
+
+        .progress-stage.complete {
+            color: var(--success);
+        }
+
+        .stage-icon {
+            width: 1rem;
+            height: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 1rem;
+            height: 1rem;
+            border: 0.125rem solid var(--border);
+            border-top: 0.125rem solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Enhanced Results */
         .demo-result {
             background: var(--dark);
             border-radius: clamp(0.5rem, 0.45rem + 0.22vw, 0.625rem);
@@ -309,13 +388,13 @@
             text-align: left;
             border: 0.0625rem solid var(--border-subtle);
             display: none;
-            animation: fadeIn 0.4s var(--ease-gentle);
+            animation: slideIn 0.5s var(--ease-gentle);
         }
 
-        @keyframes fadeIn {
+        @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateY(0.5rem);
+                transform: translateY(1rem);
             }
             to {
                 opacity: 1;
@@ -333,7 +412,7 @@
         .result-indicator {
             width: 0.5rem;
             height: 0.5rem;
-            background: var(--accent);
+            background: var(--success);
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
@@ -345,7 +424,7 @@
 
         .result-title {
             font-weight: 600;
-            font-size: var(--text-lg);
+            font-size: var(--text-xl);
             color: var(--text-primary);
         }
 
@@ -362,10 +441,12 @@
             line-height: 1.5;
         }
 
+        /* Enhanced Stats Grid */
         .result-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(clamp(6rem, 28vw, 8rem), 1fr));
             gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
         }
 
         .stat {
@@ -374,6 +455,12 @@
             background: var(--void);
             border-radius: clamp(0.375rem, 0.34rem + 0.17vw, 0.4375rem);
             border: 0.0625rem solid var(--border);
+            transition: all 0.2s var(--ease-gentle);
+        }
+
+        .stat:hover {
+            transform: translateY(-0.125rem);
+            border-color: var(--primary);
         }
 
         .stat-value {
@@ -392,61 +479,321 @@
             margin-top: var(--space-xs);
         }
 
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: clamp(0.75rem, 1.5vw, 0.875rem);
-            height: clamp(0.75rem, 1.5vw, 0.875rem);
-            border: 0.125rem solid var(--void);
-            border-top: 0.125rem solid transparent;
+        /* Enhanced Details Sections */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(16rem, 45vw, 20rem), 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .detail-section {
+            background: var(--void);
+            border-radius: clamp(0.375rem, 0.34rem + 0.17vw, 0.4375rem);
+            padding: var(--space-lg);
+            border: 0.0625rem solid var(--border);
+        }
+
+        .section-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .section-content {
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .section-content p {
+            margin: var(--space-xs) 0;
+        }
+
+        .section-content .highlight {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Enhanced Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(clamp(8rem, 25vw, 10rem), 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .action-button {
+            padding: var(--space-md) var(--space-lg);
+            border-radius: clamp(0.375rem, 0.34rem + 0.17vw, 0.4375rem);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s var(--ease-gentle);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            text-decoration: none;
+        }
+
+        .action-button.primary {
+            background: var(--primary);
+            color: var(--void);
+        }
+
+        .action-button.secondary {
+            background: var(--primary-ghost);
+            color: var(--primary);
+            border: 0.0625rem solid var(--primary-whisper);
+        }
+
+        .action-button.success {
+            background: var(--success);
+            color: var(--void);
+        }
+
+        .action-button:hover {
+            transform: translateY(-0.0625rem);
+            box-shadow: var(--shadow-subtle);
+        }
+
+        /* Enhanced Error Handling */
+        .error-container {
+            background: var(--void);
+            border: 0.0625rem solid var(--error);
+            border-radius: clamp(0.5rem, 0.45rem + 0.22vw, 0.625rem);
+            padding: var(--space-xl);
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-lg);
+        }
+
+        .error-title {
+            font-size: var(--text-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--space-md);
+        }
+
+        .error-message {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-lg);
+            line-height: 1.5;
+        }
+
+        .error-suggestions {
+            background: var(--surface);
+            border-radius: clamp(0.375rem, 0.34rem + 0.17vw, 0.4375rem);
+            padding: var(--space-lg);
+            margin-bottom: var(--space-lg);
+            text-align: left;
+        }
+
+        .suggestion-title {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--warning);
+            margin-bottom: var(--space-sm);
+        }
+
+        .suggestion-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .suggestion-list li {
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+            margin: var(--space-xs) 0;
+            padding-left: var(--space-lg);
+            position: relative;
+        }
+
+        .suggestion-list li::before {
+            content: "💡";
+            position: absolute;
+            left: 0;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Success Messages */
+        .success-banner {
+            background: linear-gradient(135deg, var(--success), var(--accent));
+            color: var(--void);
+            padding: var(--space-md);
+            border-radius: clamp(0.375rem, 0.34rem + 0.17vw, 0.4375rem);
+            margin-bottom: var(--space-lg);
+            text-align: center;
+            font-size: var(--text-sm);
+            font-weight: 500;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(0.25rem);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+            opacity: 0;
+            animation: fadeIn 0.3s var(--ease-gentle) forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--dark);
+            border-radius: clamp(0.75rem, 0.68rem + 0.33vw, 0.9375rem);
+            max-width: 50rem;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: var(--space-2xl);
+            border: 0.0625rem solid var(--border);
+            position: relative;
+            animation: slideUp 0.3s var(--ease-gentle);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(2rem);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .modal-title {
+            font-size: var(--text-xl);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: var(--space-xs);
+            border-radius: 0.25rem;
+            transition: all 0.2s var(--ease-gentle);
+        }
+
+        .modal-close:hover {
+            background: var(--surface);
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            font-size: var(--text-sm);
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .code-block {
+            background: var(--void);
+            border: 0.0625rem solid var(--border);
+            border-radius: clamp(0.375rem, 0.34rem + 0.17vw, 0.4375rem);
+            padding: var(--space-lg);
+            font-family: 'Courier New', monospace;
+            font-size: var(--text-xs);
+            overflow-x: auto;
+            margin: var(--space-md) 0;
+            white-space: pre-wrap;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 48rem) {
+            .nav-links {
+                display: none;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .result-stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Loading States */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--surface);
+            border-radius: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s var(--ease-gentle);
+        }
+
+        .loading-overlay.show {
+            opacity: 0.95;
+            pointer-events: all;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 0.25rem solid var(--border);
+            border-top: 0.25rem solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Debug console */
-        .debug-console {
-            position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            width: 20rem;
-            max-height: 15rem;
-            background: #000;
-            border: 1px solid #333;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 0.75rem;
-            color: #a1a1aa;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
-        }
-
-        .debug-toggle {
-            position: fixed;
-            bottom: 1rem;
-            left: 1rem;
-            background: #333;
-            color: #fff;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            font-size: 0.75rem;
-            z-index: 1001;
+            margin: 0 auto var(--space-lg);
         }
     </style>
 </head>
 <body>
-    <!-- Debug Toggle -->
-    <button class="debug-toggle" onclick="toggleDebug()">Debug Console</button>
-    <div id="debug-console" class="debug-console"></div>
-
     <!-- Header -->
     <header class="header">
         <nav class="nav">
@@ -480,81 +827,112 @@
             Extract company intelligence from any website. Test unlimited for free below, then save your research with our cross-browser extension.
         </p>
 
-        <!-- Demo -->
+        <!-- Enhanced Demo Section -->
         <div class="hero-demo">
             <div class="demo-input-group">
                 <input 
                     type="url" 
                     id="demo-url" 
                     class="demo-input" 
-                    placeholder="Enter any company website (e.g., apple.com, stripe.com, audi.de)"
+                    placeholder="Enter any company website (e.g., apple.com, stripe.com, audi.de, microsoft.com)"
                     value=""
                 >
-                <button onclick="runDemo()" class="demo-button" id="demo-btn">
+                <button onclick="runEnhancedDemo()" class="demo-button" id="demo-btn">
                     <i data-feather="arrow-right"></i>
                     Extract Intelligence
                 </button>
             </div>
+
+            <!-- Enhanced Progress Indicator -->
+            <div id="progress-container" class="progress-container">
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div id="progress-stages">
+                    <div class="progress-stage" id="stage-fetch">
+                        <div class="stage-icon"><div class="spinner"></div></div>
+                        <span>Fetching website content...</span>
+                    </div>
+                    <div class="progress-stage" id="stage-analyze">
+                        <div class="stage-icon">⏳</div>
+                        <span>Analyzing business intelligence...</span>
+                    </div>
+                    <div class="progress-stage" id="stage-extract">
+                        <div class="stage-icon">⏳</div>
+                        <span>Extracting company data...</span>
+                    </div>
+                    <div class="progress-stage" id="stage-complete">
+                        <div class="stage-icon">⏳</div>
+                        <span>Generating insights...</span>
+                    </div>
+                </div>
+            </div>
             
+            <!-- Enhanced Results Section -->
             <div id="demo-result" class="demo-result">
-                <!-- Results will be populated by displayRealResults() -->
+                <!-- Results will be populated by displayEnhancedResults() -->
+            </div>
+
+            <!-- Loading Overlay -->
+            <div id="loading-overlay" class="loading-overlay">
+                <div class="loading-content">
+                    <div class="loading-spinner"></div>
+                    <p style="color: var(--text-secondary); font-size: var(--text-sm);">Processing extraction...</p>
+                </div>
             </div>
         </div>
     </section>
 
     <script>
-        // Debug console functionality
-        let debugEnabled = false;
-
-        function debugLog(message, type = 'info') {
-            const timestamp = new Date().toLocaleTimeString();
-            const prefix = {
-                'info': '💡',
-                'success': '✅',
-                'error': '❌',
-                'warning': '⚠️',
-                'network': '📡'
-            }[type] || '📝';
-            
-            const logMessage = `[${timestamp}] ${prefix} ${message}`;
-            console.log(logMessage);
-            
-            if (debugEnabled) {
-                const debugConsole = document.getElementById('debug-console');
-                debugConsole.textContent += logMessage + '\n';
-                debugConsole.scrollTop = debugConsole.scrollHeight;
-            }
-        }
-
-        function toggleDebug() {
-            debugEnabled = !debugEnabled;
-            const debugConsole = document.getElementById('debug-console');
-            debugConsole.style.display = debugEnabled ? 'block' : 'none';
-            
-            if (debugEnabled) {
-                debugLog('Debug console enabled');
-            }
-        }
+        // Enhanced Global State
+        let currentExtractionData = null;
+        let progressInterval = null;
+        let isExtracting = false;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof feather !== 'undefined') {
                 feather.replace();
             }
-            debugLog('Extracti website loaded');
+            setupEnhancedEventListeners();
         });
 
+        function setupEnhancedEventListeners() {
+            const demoInput = document.getElementById('demo-url');
+            if (demoInput) {
+                demoInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !isExtracting) {
+                        runEnhancedDemo();
+                    }
+                });
+
+                // Auto-format URLs
+                demoInput.addEventListener('blur', function() {
+                    let url = this.value.trim();
+                    if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
+                        this.value = 'https://' + url;
+                    }
+                });
+            }
+        }
+
         // ============================================
-        // FIXED API COMMUNICATION
+        // ENHANCED DEMO FUNCTION WITH PROGRESS
         // ============================================
-        async function runDemo() {
+        async function runEnhancedDemo() {
+            if (isExtracting) return;
+            
             const urlInput = document.getElementById('demo-url');
             const resultDiv = document.getElementById('demo-result');
             const button = document.getElementById('demo-btn');
             
             let url = urlInput.value.trim();
             if (!url) {
-                showError('Please enter a website URL');
+                showEnhancedError('URL Required', 'Please enter a website URL to extract company intelligence.', [
+                    'Try example URLs: apple.com, microsoft.com, stripe.com',
+                    'Make sure the URL is accessible and valid',
+                    'Use company websites for best results'
+                ]);
                 return;
             }
             
@@ -563,148 +941,212 @@
                 url = 'https://' + url;
             }
             
-            // Validate URL
+            // Enhanced URL validation
             try {
-                new URL(url);
+                const urlObj = new URL(url);
+                if (!urlObj.hostname.includes('.')) {
+                    throw new Error('Invalid domain');
+                }
             } catch {
-                showError('Please enter a valid website URL');
+                showEnhancedError('Invalid URL', 'Please enter a valid website URL.', [
+                    'Make sure the URL includes a domain (e.g., company.com)',
+                    'Check for typos in the website address',
+                    'Ensure the website is publicly accessible'
+                ]);
                 return;
             }
             
-            // Loading state
-            button.innerHTML = '<span class="loading"></span> Analyzing';
-            button.disabled = true;
+            isExtracting = true;
+            showProgress();
+            startLoadingState(button);
             resultDiv.style.display = 'none';
             
-            debugLog(`Starting extraction for: ${url}`);
-            
             try {
-                // ============================================
-                // FIXED API CALL - Matches working Edge Function
-                // ============================================
-                const apiUrl = 'https://aemxkdycpfjcqokkjqtt.supabase.co/functions/v1/analyze-company';
-                const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbXhrZHljcGZqY3Fva2tqcXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5MDg5MzksImV4cCI6MjA2NDQ4NDkzOX0.h87BYbdJynUTsTSXFpz0GHfTI5AeNcEIMaUCaJ0nMjs';
-                
-                debugLog('Preparing API request...', 'network');
-                
-                const requestData = {
-                    url: url
-                };
-                
-                const requestOptions = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'authorization': `Bearer ${anonKey}`,
-                        'apikey': anonKey,
-                        'x-client-info': 'extracti-web@1.0.0'
-                    },
-                    body: JSON.stringify(requestData),
-                    mode: 'cors'
-                };
-                
-                debugLog(`API URL: ${apiUrl}`, 'network');
-                debugLog(`Request headers: ${JSON.stringify(Object.keys(requestOptions.headers))}`, 'network');
-                debugLog(`Request body: ${JSON.stringify(requestData)}`, 'network');
-                
-                // Call the Edge Function
-                debugLog('Sending request...', 'network');
-                const response = await fetch(apiUrl, requestOptions);
-                
-                debugLog(`Response status: ${response.status} ${response.statusText}`, 
-                    response.ok ? 'success' : 'error');
-                debugLog(`Response headers: ${JSON.stringify(Object.fromEntries(response.headers.entries()))}`, 'network');
-                
-                // Check for successful response
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    debugLog(`Error response body: ${errorText}`, 'error');
-                    throw new Error(`API Error: ${response.status} ${response.statusText}`);
-                }
-                
-                // Parse the successful response
-                const result = await response.json();
-                debugLog('Response parsed successfully', 'success');
-                debugLog(`Result: ${JSON.stringify(result, null, 2)}`, 'success');
-                
-                if (result.success && result.data) {
-                    displayRealResults(result.data);
-                    resultDiv.style.display = 'block';
-                    window.lastExtractionData = result.data;
-                    
-                    debugLog(`Extraction successful! Company: ${result.data.company_info?.name}`, 'success');
-                } else {
-                    throw new Error(result.error || 'No data returned from API');
-                }
-                
+                await performEnhancedExtraction(url);
             } catch (error) {
-                debugLog(`Extraction failed: ${error.message}`, 'error');
-                debugLog(`Error type: ${error.constructor.name}`, 'error');
-                debugLog(`Stack trace: ${error.stack}`, 'error');
-                handleExtractionError(error, resultDiv);
+                console.error('Enhanced extraction failed:', error);
+                handleEnhancedError(error);
             } finally {
-                // Reset button state
-                button.innerHTML = '<i data-feather="arrow-right"></i> Extract Intelligence';
-                button.disabled = false;
-                if (typeof feather !== 'undefined') {
-                    feather.replace();
+                isExtracting = false;
+                hideProgress();
+                resetLoadingState(button);
+            }
+        }
+
+        // ============================================
+        // ENHANCED PROGRESS SYSTEM
+        // ============================================
+        function showProgress() {
+            const container = document.getElementById('progress-container');
+            const fill = document.getElementById('progress-fill');
+            
+            container.classList.add('show');
+            fill.style.width = '0%';
+            
+            // Reset all stages
+            document.querySelectorAll('.progress-stage').forEach(stage => {
+                stage.classList.remove('active', 'complete');
+            });
+            
+            // Start progress animation
+            simulateProgress();
+        }
+
+        function hideProgress() {
+            const container = document.getElementById('progress-container');
+            if (progressInterval) {
+                clearInterval(progressInterval);
+                progressInterval = null;
+            }
+            
+            setTimeout(() => {
+                container.classList.remove('show');
+            }, 1000);
+        }
+
+        function simulateProgress() {
+            const stages = ['stage-fetch', 'stage-analyze', 'stage-extract', 'stage-complete'];
+            const fill = document.getElementById('progress-fill');
+            let currentStage = 0;
+            let progress = 0;
+            
+            progressInterval = setInterval(() => {
+                progress += Math.random() * 15 + 5;
+                
+                if (progress >= 100) {
+                    progress = 100;
+                    fill.style.width = '100%';
+                    completeAllStages();
+                    clearInterval(progressInterval);
+                    return;
                 }
+                
+                fill.style.width = progress + '%';
+                
+                // Update stages based on progress
+                const stageProgress = Math.floor(progress / 25);
+                if (stageProgress > currentStage && currentStage < stages.length) {
+                    completeStage(stages[currentStage]);
+                    currentStage++;
+                    if (currentStage < stages.length) {
+                        activateStage(stages[currentStage]);
+                    }
+                }
+            }, 300);
+            
+            // Start first stage
+            if (stages.length > 0) {
+                activateStage(stages[0]);
             }
         }
-        
-        function handleExtractionError(error, resultDiv) {
-            let errorMessage = 'Failed to extract company intelligence';
-            let troubleshooting = 'Please try again or contact support if the issue persists.';
+
+        function activateStage(stageId) {
+            const stage = document.getElementById(stageId);
+            if (stage) {
+                stage.classList.add('active');
+                stage.querySelector('.stage-icon').innerHTML = '<div class="spinner"></div>';
+            }
+        }
+
+        function completeStage(stageId) {
+            const stage = document.getElementById(stageId);
+            if (stage) {
+                stage.classList.remove('active');
+                stage.classList.add('complete');
+                stage.querySelector('.stage-icon').innerHTML = '✅';
+            }
+        }
+
+        function completeAllStages() {
+            document.querySelectorAll('.progress-stage').forEach(stage => {
+                stage.classList.remove('active');
+                stage.classList.add('complete');
+                stage.querySelector('.stage-icon').innerHTML = '✅';
+            });
+        }
+
+        // ============================================
+        // ENHANCED EXTRACTION LOGIC
+        // ============================================
+        async function performEnhancedExtraction(url) {
+            const apiUrl = 'https://aemxkdycpfjcqokkjqtt.supabase.co/functions/v1/analyze-company';
+            const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFlbXhrZHljcGZqY3Fva2tqcXR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5MDg5MzksImV4cCI6MjA2NDQ4NDkzOX0.h87BYbdJynUTsTSXFpz0GHfTI5AeNcEIMaUCaJ0nMjs';
             
-            if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                errorMessage = 'Network connection error';
-                troubleshooting = 'Please check your internet connection and try again.';
-            } else if (error.message.includes('CORS') || error.message.includes('cors')) {
-                errorMessage = 'Browser security restriction';
-                troubleshooting = 'This appears to be a browser configuration issue. Try refreshing the page.';
-            } else if (error.message.includes('500')) {
-                errorMessage = 'Server temporarily unavailable';
-                troubleshooting = 'Our servers are experiencing high load. Please try again in a moment.';
-            } else if (error.message.includes('429')) {
-                errorMessage = 'Too many requests';
-                troubleshooting = 'Please wait a moment before trying again.';
-            } else if (error.message.includes('400')) {
-                errorMessage = 'Invalid website URL';
-                troubleshooting = 'Please check that you entered a valid website URL and try again.';
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${anonKey}`,
+                    'apikey': anonKey,
+                    'x-client-info': 'extracti-enhanced@2.0.0'
+                },
+                body: JSON.stringify({
+                    url: url,
+                    format: 'json',
+                    options: {
+                        analysis_depth: 'comprehensive',
+                        include_patterns: true,
+                        include_contact: true,
+                        include_vectors: true
+                    }
+                }),
+                mode: 'cors'
+            };
+            
+            const response = await fetch(apiUrl, requestOptions);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                let errorData;
+                try {
+                    errorData = JSON.parse(errorText);
+                } catch {
+                    errorData = { message: errorText };
+                }
+                
+                throw new Error(`API Error: ${response.status} - ${errorData.message || response.statusText}`);
             }
             
-            resultDiv.innerHTML = `
-                <div style="text-align: center; padding: 2rem; color: #ef4444;">
-                    <div style="font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
-                    <h3 style="margin-bottom: 1rem; font-weight: 600; color: var(--text-primary);">${errorMessage}</h3>
-                    <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1.5rem; max-width: 20rem; margin-left: auto; margin-right: auto;">
-                        ${troubleshooting}
-                    </p>
-                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                        <button onclick="runDemo()" style="padding: 0.75rem 1.5rem; background: var(--primary); color: var(--void); border: none; border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
-                            Try Again
-                        </button>
-                        <button onclick="toggleDebug()" style="padding: 0.75rem 1.5rem; background: var(--surface); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 0.375rem; cursor: pointer; font-weight: 500;">
-                            Show Debug Info
-                        </button>
-                    </div>
-                </div>
-            `;
-            resultDiv.style.display = 'block';
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                currentExtractionData = result.data;
+                displayEnhancedResults(result.data);
+                showSuccessBanner();
+            } else {
+                throw new Error(result.error || 'No data returned from API');
+            }
         }
-        
-        function displayRealResults(data) {
+
+        // ============================================
+        // ENHANCED RESULTS DISPLAY
+        // ============================================
+        function displayEnhancedResults(data) {
             const resultDiv = document.getElementById('demo-result');
             
-            // Extract key information
-            const companyName = data.company_info?.name || 'Company Extracted';
-            const industry = data.company_info?.industry || data.business_intelligence?.industry_category || 'Unknown Industry';
-            const businessScale = data.business_intelligence?.business_scale || 'Unknown Scale';
+            // Extract comprehensive information
+            const company = data.company_info || {};
+            const business = data.business_intelligence || {};
+            const contact = data.contact_info || {};
+            const patterns = data.content_patterns || {};
+            const semantic = data.semantic_analysis || {};
+            
+            const companyName = company.name || 'Unknown Company';
+            const industry = company.industry || business.industry_category || 'Unknown Industry';
+            const businessScale = business.business_scale || 'Unknown Scale';
             const confidence = Math.round((data.confidence_score || 0.85) * 100);
             const processingTime = data.processing_time_ms || 0;
-            const description = data.description || data.company_info?.description || 'Business intelligence extracted from website content.';
+            const description = data.description || company.description || 'Business intelligence extracted from website content.';
             
-            // Show the results
+            // Build contact section
+            const contactDetails = buildContactSection(contact);
+            
+            // Build business intelligence section
+            const businessDetails = buildBusinessIntelligenceSection(business, patterns, semantic);
+            
+            // Build technical analysis section
+            const technicalDetails = buildTechnicalAnalysisSection(data, patterns, semantic);
+            
             resultDiv.innerHTML = `
                 <div class="result-header">
                     <div class="result-indicator"></div>
@@ -723,58 +1165,552 @@
                         <span class="stat-label">Processing</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-value">${data.word_count || '1000'}</span>
+                        <span class="stat-value">${data.word_count || '0'}</span>
+                        <span class="stat-label">Words</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value">${(data.structured_fields?.length || 0)}</span>
                         <span class="stat-label">Data Points</span>
                     </div>
                 </div>
                 
-                <div style="margin-top: 1.5rem; text-align: center; padding: 0.75rem; background: var(--surface); border-radius: 0.375rem; border: 1px solid var(--border);">
-                    <p style="margin: 0; font-size: 0.75rem; color: var(--text-ghost);">
-                        ✅ Live extraction successful! Your Edge Function is working perfectly.
-                    </p>
+                <div class="details-grid">
+                    ${contactDetails}
+                    ${businessDetails}
+                    ${technicalDetails}
                 </div>
                 
-                <div style="margin-top: 1rem; text-align: center; padding: 1rem; background: linear-gradient(135deg, var(--primary-ghost), var(--primary-whisper)); border-radius: 0.5rem; border: 1px solid var(--primary-whisper);">
-                    <p style="margin: 0 0 0.5rem 0; font-size: 0.875rem; font-weight: 600; color: var(--primary);">
-                        💡 Want to save this research?
-                    </p>
-                    <p style="margin: 0 0 1rem 0; font-size: 0.75rem; color: var(--text-secondary);">
-                        Get our browser extension to extract & save from any website
-                    </p>
-                    <button onclick="showExtensionInfo()" style="padding: 0.5rem 1rem; background: var(--primary); color: var(--void); border: none; border-radius: 0.375rem; font-size: 0.75rem; font-weight: 500; cursor: pointer;">
-                        Get Extension - $9/month
+                <div class="action-buttons">
+                    <button class="action-button primary" onclick="viewFullReport()">
+                        <i data-feather="file-text"></i>
+                        View Full Report
                     </button>
+                    <button class="action-button secondary" onclick="downloadPDF()">
+                        <i data-feather="download"></i>
+                        Download PDF
+                    </button>
+                    <button class="action-button secondary" onclick="downloadJSON()">
+                        <i data-feather="code"></i>
+                        Export JSON
+                    </button>
+                    <button class="action-button secondary" onclick="downloadMarkdown()">
+                        <i data-feather="file"></i>
+                        Markdown
+                    </button>
+                </div>
+                
+                <div class="success-banner">
+                    ✅ Live extraction successful! Your Edge Function v18.1 is working perfectly.
+                </div>
+            `;
+            
+            resultDiv.style.display = 'block';
+            
+            // Replace feather icons
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        }
+
+        function buildContactSection(contact) {
+            const emails = contact.emails || [];
+            const phones = contact.phones || [];
+            const addresses = contact.addresses || [];
+            const links = contact.contact_links || [];
+            
+            if (emails.length === 0 && phones.length === 0 && addresses.length === 0 && links.length === 0) {
+                return `
+                    <div class="detail-section">
+                        <div class="section-title">
+                            <i data-feather="mail"></i>
+                            Contact Information
+                        </div>
+                        <div class="section-content">
+                            <p>No contact information found on this website.</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            let content = '';
+            if (emails.length > 0) content += `<p><span class="highlight">📧 Email:</span> ${emails.slice(0, 2).join(', ')}</p>`;
+            if (phones.length > 0) content += `<p><span class="highlight">📞 Phone:</span> ${phones.slice(0, 2).join(', ')}</p>`;
+            if (addresses.length > 0) content += `<p><span class="highlight">📍 Address:</span> ${addresses[0]}</p>`;
+            if (links.length > 0) content += `<p><span class="highlight">🔗 Links:</span> ${links.length} contact page(s)</p>`;
+            
+            return `
+                <div class="detail-section">
+                    <div class="section-title">
+                        <i data-feather="mail"></i>
+                        Contact Information
+                    </div>
+                    <div class="section-content">${content}</div>
                 </div>
             `;
         }
-        
-        // Simple error display helper
-        function showError(message) {
-            const resultDiv = document.getElementById('demo-result');
-            resultDiv.innerHTML = `
-                <div style="text-align: center; padding: 1.5rem; color: #ef4444;">
-                    <p style="margin: 0; font-weight: 500;">${message}</p>
+
+        function buildBusinessIntelligenceSection(business, patterns, semantic) {
+            const activityType = business.activity_type || 'Unknown';
+            const digitalMaturity = business.digital_maturity || 'Unknown';
+            const marketOrientation = business.market_orientation || 'Unknown';
+            const contentPurpose = business.content_purpose || 'Unknown';
+            const businessFocus = Math.round((semantic.business_focus_score || 0) * 100);
+            
+            return `
+                <div class="detail-section">
+                    <div class="section-title">
+                        <i data-feather="trending-up"></i>
+                        Business Intelligence
+                    </div>
+                    <div class="section-content">
+                        <p><span class="highlight">Activity:</span> ${activityType.replace(/_/g, ' ')}</p>
+                        <p><span class="highlight">Digital Maturity:</span> ${digitalMaturity}</p>
+                        <p><span class="highlight">Market Focus:</span> ${marketOrientation}</p>
+                        <p><span class="highlight">Content Purpose:</span> ${contentPurpose}</p>
+                        <p><span class="highlight">Business Focus:</span> ${businessFocus}%</p>
+                    </div>
                 </div>
             `;
+        }
+
+        function buildTechnicalAnalysisSection(data, patterns, semantic) {
+            const language = data.language || 'Unknown';
+            const contentQuality = Math.round((data.content_quality || 0) * 100);
+            const semanticRichness = Math.round((semantic.semantic_richness || 0) * 100);
+            const patternDiversity = Math.round((patterns.pattern_diversity || 0) * 100);
+            const structuredFields = data.structured_fields?.length || 0;
+            
+            return `
+                <div class="detail-section">
+                    <div class="section-title">
+                        <i data-feather="cpu"></i>
+                        Technical Analysis
+                    </div>
+                    <div class="section-content">
+                        <p><span class="highlight">Language:</span> ${language.toUpperCase()}</p>
+                        <p><span class="highlight">Content Quality:</span> ${contentQuality}%</p>
+                        <p><span class="highlight">Semantic Richness:</span> ${semanticRichness}%</p>
+                        <p><span class="highlight">Pattern Diversity:</span> ${patternDiversity}%</p>
+                        <p><span class="highlight">Structured Data:</span> ${structuredFields} fields</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================
+        // ENHANCED ERROR HANDLING
+        // ============================================
+        function handleEnhancedError(error) {
+            let title = 'Extraction Failed';
+            let message = 'An unexpected error occurred during the extraction process.';
+            let suggestions = [
+                'Check your internet connection',
+                'Try again in a few moments',
+                'Contact support if the issue persists'
+            ];
+            
+            if (error.message.includes('401')) {
+                title = 'Authentication Error';
+                message = 'The API key is invalid or expired.';
+                suggestions = [
+                    'This is a temporary server issue',
+                    'The API key will be refreshed automatically',
+                    'Try again in a few minutes'
+                ];
+            } else if (error.message.includes('403')) {
+                title = 'Access Denied';
+                message = 'Access to the extraction service is currently restricted.';
+                suggestions = [
+                    'Check if you have exceeded rate limits',
+                    'Wait a few minutes before trying again',
+                    'Contact support for assistance'
+                ];
+            } else if (error.message.includes('404')) {
+                title = 'Website Not Found';
+                message = 'The specified website could not be reached.';
+                suggestions = [
+                    'Check the URL for typos',
+                    'Ensure the website is publicly accessible',
+                    'Try a different company website'
+                ];
+            } else if (error.message.includes('500')) {
+                title = 'Server Error';
+                message = 'Our extraction servers are temporarily experiencing issues.';
+                suggestions = [
+                    'This is a temporary server issue',
+                    'Try again in a few minutes',
+                    'Check our status page for updates'
+                ];
+            } else if (error.message.includes('timeout') || error.message.includes('Failed to fetch')) {
+                title = 'Connection Timeout';
+                message = 'The extraction request timed out.';
+                suggestions = [
+                    'Check your internet connection',
+                    'The website may be slow to respond',
+                    'Try a different website or try again later'
+                ];
+            } else if (error.message.includes('CORS')) {
+                title = 'Browser Security Restriction';
+                message = 'Your browser is blocking the request due to security policies.';
+                suggestions = [
+                    'Refresh the page and try again',
+                    'Clear your browser cache',
+                    'Try using a different browser'
+                ];
+            }
+            
+            showEnhancedError(title, message, suggestions);
+        }
+
+        function showEnhancedError(title, message, suggestions = []) {
+            const resultDiv = document.getElementById('demo-result');
+            
+            const suggestionsList = suggestions.map(s => `<li>${s}</li>`).join('');
+            
+            resultDiv.innerHTML = `
+                <div class="error-container">
+                    <div class="error-icon">⚠️</div>
+                    <div class="error-title">${title}</div>
+                    <div class="error-message">${message}</div>
+                    
+                    ${suggestions.length > 0 ? `
+                        <div class="error-suggestions">
+                            <div class="suggestion-title">💡 Suggested Solutions:</div>
+                            <ul class="suggestion-list">${suggestionsList}</ul>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="error-actions">
+                        <button class="action-button primary" onclick="runEnhancedDemo()">
+                            <i data-feather="refresh-cw"></i>
+                            Try Again
+                        </button>
+                        <button class="action-button secondary" onclick="showSampleExtraction()">
+                            <i data-feather="eye"></i>
+                            View Sample
+                        </button>
+                        <button class="action-button secondary" onclick="contactSupport()">
+                            <i data-feather="help-circle"></i>
+                            Get Help
+                        </button>
+                    </div>
+                </div>
+            `;
+            
             resultDiv.style.display = 'block';
+            
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        }
+
+        // ============================================
+        // ENHANCED DOWNLOAD OPTIONS
+        // ============================================
+        function downloadPDF() {
+            if (!currentExtractionData) return;
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const company = currentExtractionData.company_info || {};
+            const business = currentExtractionData.business_intelligence || {};
+            const contact = currentExtractionData.contact_info || {};
+            
+            // PDF Generation
+            doc.setFontSize(20);
+            doc.text(company.name || 'Company Analysis', 20, 20);
+            
+            doc.setFontSize(14);
+            doc.text(`Industry: ${company.industry || 'Unknown'}`, 20, 35);
+            doc.text(`Business Scale: ${business.business_scale || 'Unknown'}`, 20, 45);
+            doc.text(`Confidence: ${Math.round((currentExtractionData.confidence_score || 0) * 100)}%`, 20, 55);
+            
+            doc.setFontSize(12);
+            let yPos = 70;
+            
+            // Description
+            if (currentExtractionData.description) {
+                doc.text('Description:', 20, yPos);
+                yPos += 10;
+                const splitDescription = doc.splitTextToSize(currentExtractionData.description, 170);
+                doc.text(splitDescription, 20, yPos);
+                yPos += splitDescription.length * 5 + 10;
+            }
+            
+            // Contact Information
+            if (contact.emails?.length || contact.phones?.length) {
+                doc.text('Contact Information:', 20, yPos);
+                yPos += 10;
+                
+                if (contact.emails?.length) {
+                    doc.text(`Email: ${contact.emails.join(', ')}`, 25, yPos);
+                    yPos += 10;
+                }
+                
+                if (contact.phones?.length) {
+                    doc.text(`Phone: ${contact.phones.join(', ')}`, 25, yPos);
+                    yPos += 10;
+                }
+                yPos += 5;
+            }
+            
+            // Business Intelligence
+            doc.text('Business Intelligence:', 20, yPos);
+            yPos += 10;
+            doc.text(`Digital Maturity: ${business.digital_maturity || 'Unknown'}`, 25, yPos);
+            yPos += 8;
+            doc.text(`Activity Type: ${(business.activity_type || 'Unknown').replace(/_/g, ' ')}`, 25, yPos);
+            yPos += 8;
+            doc.text(`Market Orientation: ${business.market_orientation || 'Unknown'}`, 25, yPos);
+            
+            // Footer
+            doc.setFontSize(10);
+            doc.text(`Generated by Extracti.ai • ${new Date().toLocaleDateString()}`, 20, 280);
+            
+            doc.save(`${(company.name || 'company').replace(/[^a-zA-Z0-9]/g, '_')}_analysis.pdf`);
+        }
+
+        function downloadJSON() {
+            if (!currentExtractionData) return;
+            
+            const jsonStr = JSON.stringify(currentExtractionData, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${(currentExtractionData.company_info?.name || 'company').replace(/[^a-zA-Z0-9]/g, '_')}_data.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadMarkdown() {
+            if (!currentExtractionData) return;
+            
+            const data = currentExtractionData;
+            const company = data.company_info || {};
+            const business = data.business_intelligence || {};
+            const contact = data.contact_info || {};
+            
+            const markdown = `# ${company.name || 'Company Analysis'}
+
+## Summary
+- **Domain:** ${company.domain || 'N/A'}
+- **Industry:** ${company.industry || 'N/A'}
+- **Business Scale:** ${business.business_scale || 'N/A'}
+- **Confidence:** ${Math.round((data.confidence_score || 0) * 100)}%
+- **Processing Time:** ${data.processing_time_ms || 0}ms
+
+## Description
+${data.description || company.description || 'No description available'}
+
+## Business Intelligence
+- **Activity Type:** ${(business.activity_type || 'N/A').replace(/_/g, ' ')}
+- **Digital Maturity:** ${business.digital_maturity || 'N/A'}
+- **Market Orientation:** ${business.market_orientation || 'N/A'}
+- **Content Purpose:** ${business.content_purpose || 'N/A'}
+
+${contact.emails?.length || contact.phones?.length ? `## Contact Information
+${contact.emails?.length ? `**Emails:** ${contact.emails.join(', ')}\n` : ''}
+${contact.phones?.length ? `**Phones:** ${contact.phones.join(', ')}\n` : ''}
+${contact.addresses?.length ? `**Addresses:** ${contact.addresses.join(', ')}\n` : ''}
+` : '## Contact Information
+No contact information found.
+
+'}## Technical Details
+- **Language:** ${data.language || 'N/A'}
+- **Word Count:** ${data.word_count || 0}
+- **Content Quality:** ${Math.round((data.content_quality || 0) * 100)}%
+- **Structured Fields:** ${data.structured_fields?.length || 0}
+
+---
+*Generated by Extracti.ai v2.0 • ${new Date().toLocaleDateString()}*`;
+
+            const blob = new Blob([markdown], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${(company.name || 'company').replace(/[^a-zA-Z0-9]/g, '_')}_report.md`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        function startLoadingState(button) {
+            button.innerHTML = '<div class="spinner"></div> Analyzing...';
+            button.disabled = true;
+            
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.classList.add('show');
+        }
+
+        function resetLoadingState(button) {
+            button.innerHTML = '<i data-feather="arrow-right"></i> Extract Intelligence';
+            button.disabled = false;
+            
+            const loadingOverlay = document.getElementById('loading-overlay');
+            loadingOverlay.classList.remove('show');
+            
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        }
+
+        function showSuccessBanner() {
+            const banner = document.createElement('div');
+            banner.className = 'success-banner';
+            banner.style.position = 'fixed';
+            banner.style.top = '1rem';
+            banner.style.right = '1rem';
+            banner.style.zIndex = '1001';
+            banner.style.maxWidth = '20rem';
+            banner.textContent = '✅ Extraction completed successfully!';
+            
+            document.body.appendChild(banner);
+            
             setTimeout(() => {
-                resultDiv.style.display = 'none';
+                banner.remove();
             }, 3000);
         }
 
-        function showExtensionInfo() {
-            alert('Extension info coming soon! Your API is working perfectly.');
+        function viewFullReport() {
+            if (!currentExtractionData) return;
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">Complete Extraction Report</div>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="code-block">${JSON.stringify(currentExtractionData, null, 2)}</div>
+                        <div style="margin-top: 1rem; text-align: center;">
+                            <button class="action-button primary" onclick="navigator.clipboard.writeText(JSON.stringify(currentExtractionData, null, 2)); this.textContent='Copied!'">
+                                Copy JSON Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
         }
 
-        // Keyboard interaction
-        document.addEventListener('DOMContentLoaded', function() {
-            const demoInput = document.getElementById('demo-url');
-            if (demoInput) {
-                demoInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        runDemo();
+        function showSampleExtraction() {
+            const sampleData = {
+                company_info: {
+                    name: 'TechCorp Solutions',
+                    domain: 'example.com',
+                    industry: 'technology',
+                    description: 'A leading technology company specializing in AI-driven business solutions.',
+                    founded: '2015',
+                    size: '250+ employees'
+                },
+                business_intelligence: {
+                    activity_type: 'service_provider',
+                    industry_category: 'technology',
+                    business_scale: 'established',
+                    digital_maturity: 'advanced',
+                    content_purpose: 'corporate_info',
+                    market_orientation: 'global'
+                },
+                contact_info: {
+                    emails: ['contact@example.com', 'sales@example.com'],
+                    phones: ['+1-555-0123', '+1-555-0124'],
+                    addresses: ['123 Tech Street, San Francisco, CA 94105'],
+                    contact_links: ['/contact', 'mailto:info@example.com']
+                },
+                content_patterns: {
+                    pattern_diversity: 0.85,
+                    repetition_analysis: {
+                        top_repeated_words: [['technology', 8], ['business', 6], ['solution', 5]]
                     }
-                });
+                },
+                semantic_analysis: {
+                    business_focus_score: 0.92,
+                    semantic_richness: 0.78
+                },
+                confidence_score: 0.94,
+                processing_time_ms: 750,
+                word_count: 1450,
+                language: 'en',
+                content_quality: 0.89,
+                structured_fields: ['og_title', 'og_description', 'jsonld_organization', 'meta_description']
+            };
+            
+            currentExtractionData = sampleData;
+            displayEnhancedResults(sampleData);
+            document.getElementById('demo-result').style.display = 'block';
+            
+            // Show sample notification
+            const notification = document.createElement('div');
+            notification.className = 'success-banner';
+            notification.style.position = 'fixed';
+            notification.style.top = '1rem';
+            notification.style.right = '1rem';
+            notification.style.zIndex = '1001';
+            notification.style.maxWidth = '20rem';
+            notification.textContent = '📋 Sample data loaded for demonstration';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function contactSupport() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="modal-title">Get Help & Support</div>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="margin-bottom: 1rem;">Need assistance with Extracti? We're here to help!</p>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">📧 Email Support</h4>
+                            <p>For technical issues and general inquiries:</p>
+                            <a href="mailto:support@extracti.ai?subject=Technical Support Request" class="action-button secondary" style="display: inline-flex; margin-top: 0.5rem;">
+                                Contact Support
+                            </a>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">🚀 Feature Requests</h4>
+                            <p>Have ideas for improvements?</p>
+                            <a href="mailto:hello@extracti.ai?subject=Feature Request" class="action-button secondary" style="display: inline-flex; margin-top: 0.5rem;">
+                                Share Ideas
+                            </a>
+                        </div>
+                        
+                        <div>
+                            <h4 style="color: var(--primary); margin-bottom: 0.5rem;">📚 Common Solutions</h4>
+                            <ul style="margin-left: 1rem; line-height: 1.6;">
+                                <li>Clear browser cache and try again</li>
+                                <li>Check if the website is publicly accessible</li>
+                                <li>Try a different company website</li>
+                                <li>Refresh the page and retry extraction</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.remove();
             }
         });
     </script>
